@@ -1,0 +1,746 @@
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene un listado de todos los carritos creados.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Operacion exitosa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/Cart"
+        "401":
+          description: No autorizado. Se necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later"
+    post:
+      summary: Crea un nuevo carrito vacio.
+      tags:
+        - Carts
+      responses:
+        "200":
+          description: Operacion exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "668d452276b460908cee9a6b"
+                      products:
+                        type: array
+                        example: []
+        "401":
+          description: No autorizado. Se necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later"
+  /api/carts/{cid}:
+    get:
+      summary: Devuelve un carrito por su ID.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a devolver
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion existosa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payload:
+                    $ref: "#components/schemas/Cart"
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "400":
+          description: Parametros invalidos. No se envía un MongoID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found <24"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: abc123 (string)"
+        "404":
+          description: Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+    delete:
+      summary: Limpia un carrito, lo vacia de productos.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a limpiar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion exitosa. El producto se eliminó correctamente del carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      acknowledged:
+                        type: boolean
+                        example: true
+                      modifiedCount:
+                        type: number
+                        example: 1
+                      upsertedId:
+                        type: string
+                        example: null
+                      upsertedCount:
+                        type: number
+                        example: 0
+                      matchedCount:
+                        type: number
+                        example: 1
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "404":
+          description: Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Añade un producto a un carrito existente.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito donde se quiere agregar un producto.
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere agregar al carrito.
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addProductToExistingCart"
+      responses:
+        "200":
+          description: Operacion exitosa. El producto se agregó correctamente al carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      acknowledged:
+                        type: boolean
+                        example: true
+                      modifiedCount:
+                        type: number
+                        example: 1
+                      upsertedId:
+                        type: string
+                        example: null
+                      upsertedCount:
+                        type: number
+                        example: 0
+                      matchedCount:
+                        type: number
+                        example: 1
+        "403":
+          description: El usuario de rol admin no puede agregar productos a un carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should not be admin!"
+        "404":
+          description: "Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos. Tambien se puede arrojar un 404 si no se encontró el producto que se intenta agregar al carrito."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "401":
+          description: El usuario solo puede añadir productos a su carrito que le corresponde cuando se creó el usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "This cart is not yours!"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Cart 66637b140a048659379d83a0 does not belong to this user!. Select your cart please."
+        "406":
+          description: No aceptable. El "owner" del producto no debe poder añadir los productos que él creó a su carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "This Product belongs to you!"
+                  cause:
+                    type: string
+                    example: Wrong Owner
+                  message:
+                    type: string
+                    example: "This product belongs to you! You can't add your own products to your cart."
+        "405":
+          description: Cantidad incorrecta. Este error se produce cuando la cantidad del producto que se quiere agregar es menor a 0 o cuando la cantidad que se quiere agregar es mayor que el stock disponible del producto.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Wrong quantity!"
+                  cause:
+                    type: string
+                    example: Wrong quantity!
+                  message:
+                    type: string
+                    example: "Recieved 5000 quantity. It must be less than product's stock."
+    put:
+      summary: Actualiza la cantidad de un producto que ya se encuentra en el carrito.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito donde se quiere modificar un producto.
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere modificar en el carrito.
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/addProductToExistingCart"
+      responses:
+        "200":
+          description: Operacion exitosa. El producto se actualizo correctamente en el carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      acknowledged:
+                        type: boolean
+                        example: true
+                      modifiedCount:
+                        type: number
+                        example: 1
+                      upsertedId:
+                        type: string
+                        example: null
+                      upsertedCount:
+                        type: number
+                        example: 0
+                      matchedCount:
+                        type: number
+                        example: 1
+        "401":
+          description: El usuario solo pueden añadir/editar productos a su carrito que le corresponde cuando se creó el usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "This cart is not yours!"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Cart 66637b140a048659379d83a0 does not belong to this user!. Select your cart please."
+        "404":
+          description: "Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos. Tambien se puede arrojar un 404 si no se encontró el producto que se intenta agregar al carrito o si el producto que se quiere actualizar NO esta en el carrito."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database. / Product not found. / Product not found in Cart.
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "405":
+          description: Cantidad incorrecta. Este error se produce cuando la cantidad del producto que se quiere modificar es menor a 0 o cuando la cantidad que se quiere modificar es mayor que el stock disponible del producto.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Wrong quantity!"
+                  cause:
+                    type: string
+                    example: Wrong quantity!
+                  message:
+                    type: string
+                    example: "Recieved 5000 quantity. It must be less than product's stock."
+    delete:
+      summmary: Elimina un producto del carrito.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito donde se quiere eliminar un producto.
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto que se quiere eliminar del carrito.
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion exitosa. El producto se eliminó correctamente del carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      acknowledged:
+                        type: boolean
+                        example: true
+                      modifiedCount:
+                        type: number
+                        example: 1
+                      upsertedId:
+                        type: string
+                        example: null
+                      upsertedCount:
+                        type: number
+                        example: 0
+                      matchedCount:
+                        type: number
+                        example: 1
+        "404":
+          description: "Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos. Tambien se puede arrojar un 404 si no se encontró el producto que se intenta agregar al carrito o si el producto que se quiere actualizar NO esta en el carrito."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database. / Product not found. / Product not found in Cart.
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+        "401":
+          description: No autorizado. Se necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+  /api/carts/delete/{cid}:
+    delete:
+      summary: Elimina el carrito.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a eliminar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion exitosa. El carrito se eliminó correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      acknowledged:
+                        type: boolean
+                        example: true
+                      deletedCount:
+                        type: number
+                        example: 1
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "404":
+          description: Carrito no encontrado. Se envía un MongoID pero no corresponde con ningun carrito en la Base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "Not found false"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Invalid cart data. ID: Should be an MongoObjectId. Recived: 668d452276b460908cee9b8d (string)"
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Completa la compra del carrito.
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: ID del carrito a eliminar
+          schema:
+            $type: string  
+      responses:
+        "200":
+          description: Operacion exitosa. El user efectúa la compra de su carrito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      code: 
+                        type: number
+                        example: 35
+                      purchase_datetime:
+                        type: date
+                        example: "2021-01-09T16:27:00.532Z"
+                      amount:
+                        type: number
+                        example: 2600
+                      purchaser:
+                        type: string
+                        example: test1@test.com
+                      _id:
+                        type: string
+                        example: 668d64d44f548e2ae126ff09
+                      __v:
+                        type: number
+                        example: 0
+        "401":
+          description: El usuario solo puede comprar el carrito que le corresponde cuando se creó el usuario.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: "This cart is not yours!"
+                  cause:
+                    type: string
+                    example: Cart not found in Database
+                  message:
+                    type: string
+                    example: "Cart 66637b140a048659379d83a0 does not belong to this user!. Select your cart please."
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID generado por MongoObject.
+        products:
+          type: array
+          description: array que contiene los productos en el carrito y la cantidad seleciconada de cada uno.
+          items:
+            type: object
+            properties:
+              id:
+                description: ID correspondiente al producto agregado al carrito.
+                $ref: "#components/schemas/Product"
+              quantity:
+                type: number
+                description: Cantidad del producto agregada al carrito.
+      example:
+        id: 66637b140a048659379d83b9
+        products:
+          [
+            { id: 66564e5315b1e0adde487d99, quantity: 8 },
+            { id: 66565cd7121aaf7375b1971j, quantity: 2 },
+          ]
+  requestBodies:
+    addProductToExistingCart:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          description: Cantidad del producto que queremos agregar al carrito.
+      example:
+        quantity: 4

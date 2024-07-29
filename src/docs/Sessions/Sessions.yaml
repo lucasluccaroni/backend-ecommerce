@@ -1,0 +1,196 @@
+paths:
+  /api/sessions/current:
+    get:
+      summary: Obtiene la informacion del usuario que mantiene la sesion activa.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Operacion existosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payload:
+                    $ref: "#components/schemas/User"
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+  /api/sessions/register:
+    post:
+      summary: Registra un nuevo usuario.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Operacion existosa. El formulario de registro se completa correctamente. Se redirecciona el usuario creado al index.
+  /api/sessions/failregister:
+    get:
+      summary: Vista de redireccion cuando un usuario falla registrandose.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Redireccion exitosa a esta vista. El usuario falló registrandose
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error registering user!"
+  /api/sessions/login:
+    post:
+      summary: Un usuario registrado se logea en la pagina.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Operacion exitosa. El formulario de login se completa correctamente. Se redirecciona el usuario con su sesion inicada al index.
+  /api/sessions/faillogin:
+    get:
+      summary: Vista de redireccion cuando un usuario falla logeandose.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Redireccion exitosa a esta vista. El usuario falló logeandose.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Fail login!"
+  /api/sessions/github:
+    get:
+      summary: Un usuario registrado o no registrado se logea a traves de GitHub.
+      tags:
+        - Sessions
+      responses:
+        "200": 
+          description: Operacion exitosa. Se redirecciona el usuario con su sesion iniciada a la vista "/profile"
+  /api/sessions/logout:
+    get:
+      summary: Se cierra la sesion activa.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: Se destruye la sesion en curso y se redirige al index.
+  /api/sessions/forgot-password:
+    post:
+      summary: Confirmacion / rechazo de cambio de contraseña.
+      tags:
+        - Sessions
+      responses:
+        "200":
+          description: La contraseña se cambió correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: object
+                    properties:
+                      akwonledged:
+                        type: boolean
+                        example: true
+                      modifiedCount:
+                        type: number
+                        example: 1
+                      upsertedId:
+                        type: string
+                        example: null
+                      upsertedCount:
+                        type: object
+                        example: 0
+                      matchedCount:
+                        type: number
+                        example: 1
+        "400":
+          description: Usuario no econtrado en la base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+              properties:
+                name:
+                  type: string
+                  example: "Not Found"
+                cause:
+                  type: string
+                  example: User Not Found in Database
+                message: 
+                  type: string
+                  example: "Invalid user data. ID: Should be an MongoObject. Recived: test@test.com (string)"
+        "401":
+          description: No autorizado. El usuario ingresó la misma contraseña que tenia al momento de reiniciarla.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Same Password
+                  cause:
+                    type: string
+                    example: Old password and new password are equals
+                  message:
+                    type: string
+                    example: You can't set the same password as new password! Try another one.
+
+
+
+components:
+  schemas:
+    User:
+      properties:
+        _id:
+          type: string
+          description: ID generado por mongo
+        firstName:
+          type: string
+          description: nombre del usuario
+        lastName:
+          type: string
+          description: apellido del usuario
+        age:
+          type: number
+          description: edad del usuario
+        password:
+          type: string
+          description: contraseña cifrada del usuario
+        email:
+          type: string
+          description: email del usuario
+        cart:
+          type: string
+          description: ID del carrito que se le genera al usuario al ser creado. Dentro de este se agregarn los productos que él agrege al carrito.
+        role:
+          type: string
+          description: Rol del usuario denro de la aplicacion. Por defecto es 'user'
+      example:
+        _id: 668b191d96683107cbd0b181
+        firstName: "TestName"
+        lastName: "TestName"
+        age: 99
+        password: "$2b$10$Qq.4KgtRlq6d.0PrfHBtXO3//NbK2VTsQEdzVjBnExktCrnA1NGzq"
+        email: test@gmail.com
+        cart: 668b191d96683107cbd0b195
+        role: user

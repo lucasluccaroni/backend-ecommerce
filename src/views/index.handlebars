@@ -1,0 +1,19 @@
+<h1> Home </h1>
+
+<div>
+    
+    {{#if isNotLoggedIn}}
+    <a href="/login"> Login </a>
+    <a href="/forgot-password"> Reset Password </a>
+    <a href="/register"> Register </a>
+    
+    {{/if}}
+
+    {{#if isLoggedIn}}
+    <a href="/profile"> My Profile </a>
+    <a href="/api/sessions/logout"> Logout </a>
+    <a href="/api/products"> Products </a>
+    <a href="/api/carts"> Cart </a>
+    <a href="/upload-documents"> Upload Documents </a>
+    {{/if}}
+</div>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Images</title>
+</head>
+<body>
+    <h1> Images uploader </h1>
+
+    <h2> Upload your image here:</h2>
+    <form method="post" action="/api/users/{{userId}}/documents" enctype="multipart/form-data">
+        <label for="_image"> Image: </label>
+        <input type="image" name="image" id="_image">
+
+        <button type="submit" > Send </button>
+
+    </form> 
+</body>
+</html>

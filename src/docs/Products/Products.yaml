@@ -1,0 +1,469 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtiene un listado de todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Operacion exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  docs:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/Product"
+                  totaldocs:
+                    type: number
+                    example: 4
+                  limit:
+                    type: number
+                    example: 10
+                  totalPages:
+                    type: number
+                    example: 4
+                  page:
+                    type: number
+                    example: 2
+                  pagingCounter:
+                    type: number
+                    example: 1
+                  hasPrevPage:
+                    type: boolean
+                    example: false
+                  hasNextPage:
+                    type: boolean
+                    example: true
+                  prevPage:
+                    type: number
+                    example: null
+                  nextPage:
+                    type: number
+                    example: 2
+        "500":
+          description: "Eror interno del servidor"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  payload:
+                    type: string
+                    example: Something went wrong!
+    post:
+      summary: Crea un nuevo producto.
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/createProduct"
+      responses:
+        "200":
+          description: Producto creado con exito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    $ref: "#components/schemas/Product"
+        "400":
+          description: Informacion invalida, error en los campos del body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Invalid Data.
+                  cause:
+                    type: string
+                    example: "Error trying to create a new Product. Try again."
+                  message:
+                    type: string
+                    example: "Some product data sent is incorrect or misisng. Please check it before re-sending."
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+        "401":
+          description: No autorizado. Se necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "403":
+          description: El usuario debe ser admin o premium para crear un producto.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User should be admin or premium!
+  /api/products/{pid}:
+    get:
+      summary: Devuelve un producto por su ID.
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: ID del producto a devolver
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payload:
+                    $ref: "#components/schemas/Product"
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+    put: 
+      summary: Actualiza un producto ya creado.
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto a actualizar
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/updateProduct"
+      responses:
+        "200":
+          description: Operacion exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: string
+                    example: "Product updated successfully"
+        "401":
+          description: No autorizado. Se necesita una session activa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!" 
+        "400":
+          description: Informacion invalida, error en los campos del producto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Invalid Data.
+                  cause:
+                    type: string
+                    example: "Error trying to update a Product. Try again."
+                  message:
+                    type: string
+                    example: "Some product data sent is incorrect or misisng. Please check it before re-sending."
+        "403":
+          description: El usuario debe ser admin o premium para crear un producto.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User should be admin or premium!
+        "404":
+          description: No se encontró el producto en la base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Not found update.
+                  cause:
+                    type: string
+                    example: "Product not found in Database."
+                  message:
+                    type: string
+                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)" 
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+    delete:
+      summary: Elimina un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto a eliminar
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Operacion exitosa
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  payload:
+                    type: string
+                    example: "Product successully deleted."
+        "401":
+          description: No autorizado. Necesita una sesión activa.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User should be logged in!"
+        "403":
+          description: Solo el owner del producto y el admin pueden eliminar el producto buscado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: This product is not yours!
+                  cause:
+                    type: string
+                    example: Wrong Owner
+                  message:
+                    type: string
+                    example: This product does not belong to you and you're not admin! 
+        "404":
+          description: No se encontró el producto en la base de datos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Not found update.
+                  cause:
+                    type: string
+                    example: "Product not found in Database."
+                  message:
+                    type: string
+                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)" 
+        "500":
+          description: Error en la base de datos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    example: Database Error.
+                  cause:
+                    type: string
+                    example: "Database problema caused failure in operation."
+                  message:
+                    type: string
+                    example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
+
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID generado por mongo
+        title:
+          type: string
+          description: nombre del producto
+        price:
+          type: number
+          description: precio del producto
+        description:
+          type: string
+          description: breve descripcion del producto
+        thumbnail:
+          type: string
+          description: imagen de referencia del producto
+        code:
+          type: string
+          description: Codigo de 6 caracteres unico del producto
+        stock:
+          type: number
+          description: cantidad numerica del producto disponible
+        status:
+          type: boolean
+          descripcion: estado del producto
+        category:
+          type: string
+          description: categoria del producto
+        owner:
+          type: string
+          description: dueño del producto. usuario que lo creó
+      example:
+        id: "665bcc5e62586dd771a50be9"
+        title: Alfajor Havanna
+        description: Alfajor de chocolate 70% cacao.
+        price: 600
+        thumbnail: "havanna.jpg"
+        code: "abc123"
+        stock: 50
+        category: alfajores
+        owner: admin
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: nombre del producto
+        price:
+          type: number
+          description: precio del producto
+        description:
+          type: string
+          description: breve descripcion del producto
+        thumbnail:
+          type: string
+          description: imagen de referencia del producto
+        code:
+          type: string
+          description: Codigo de 6 caracteres unico del producto
+        stock:
+          type: number
+          description: cantidad numerica del producto disponible
+        status:
+          type: boolean
+          description: estado del producto
+        category:
+          type: string
+          description: categoria del producto
+        owner:
+          type: string
+          description: dueño del producto. usuario que lo creó
+      example:
+        title: Alfajor Havanna
+        description: Alfajor de chocolate 70% cacao.
+        price: 600
+        thumbnail: "havanna.jpg"
+        code: "abc123"
+        stock: 50
+        category: alfajores
+        owner: admin
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: string
+          description: nombre del producto
+        price:
+          type: number
+          description: precio del producto
+        description:
+          type: string
+          description: breve descripcion del producto
+        thumbnail:
+          type: string
+          description: imagen de referencia del producto
+        stock:
+          type: number
+          description: cantidad numerica del producto disponible
+        status:
+          type: boolean
+          description: estado del producto
+        category:
+          type: string
+          description: categoria del producto
+      example:
+        title: Alfajor Cachafaz
+        description: Alfajor de chocolate 10% cacao.
+        price: 800
+        thumbnail: "cachafaz.jpg"
+        stock: 65
+        category: alfajores
+
+
+
+

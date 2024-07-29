@@ -1,0 +1,32 @@
+{{!-- <div>
+    <h2> ¡Bienvenido/a: {{user.firstName}} {{user.lastName}}! </h2>
+    <h3> Datos del perfil: </h3>
+    <div>Edad: {{user.age}} </div>
+    <div> Email: {{user.email}} </div>
+    <div> Rol: {{user.rol}} </div>
+</div> --}}
+
+
+
+<h1> PRODUCTS </h1>
+<div> Current Page: {{products.page}} </div>
+<div> Total pages: {{products.totalPages}} </div>
+
+<ul>
+    {{#each products.docs}}
+    <li> Title: {{title}} -- Desc: {{description}} -- ${{price}} -- Stock: {{stock}}u. -- Category: {{category}} </li>
+    {{/each}}
+</ul>
+
+{{#if products.hasPrevPage}}
+<a href="/api/products?page={{products.prevPage}}&limit={{products.limit}}"> Prev  </a>
+{{/if}}
+
+{{#if products.hasNextPage}}
+<a href="/api/products?page={{products.nextPage}}&limit={{products.limit}}"> Next </a>
+{{/if}}
+
+
+<p> To upload a product Image, go to: "/upload-product-images/:pid"</p>
+<a href="/"> Home </a>
+

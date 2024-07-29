@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Documents</title>
+</head>
+
+<body>
+    <h1> Documents uploader </h1>
+
+    <form method="post" action="/users/{{uid}}/documents" enctype="multipart/form-data">
+
+        <h2> Upload your documents here (max. 3):</h2>
+        <label for="_documents"> Documents </label>
+        <input type="file" name="documents" id="_documents" multiple>
+
+        <input type="submit" value="Upload">
+
+    </form>
+
+</body>
+
+</html>
