@@ -23,8 +23,6 @@ class ProductsController {
 
             const products = await this.service.getProducts(query, sort, limit, page)
 
-            console.log("RESULTADO DE PRODUCTS EN CONTROLLER => ", products)
-
             return products
         }
         catch (err) {

@@ -8,19 +8,28 @@ class UsersController {
         this.service = service
     }
 
-    //// async resetPassword(req, res) {
-    ////     try {
-    ////         const { email, password } = req.body
+    // Traer todos los usuarios
+    async getUsers(req, res) {
+        try{
+            // Queries
+            const limit = req.query.limit || 10
+            const page = req.query.page || 1
+            const sort = req.query.sort // asc o desc
+            let query = {}
 
-    ////         const resetPassword = this.service.resetPassword(email, password)
+            const users = await this.service.getUsers(query, sort, limit, page)
 
-    ////         return resetPassword
-    ////     }
-    ////     catch (err) {
-    ////         // console.log("CATCH EN CONTROLLER - resetPassword", err)
-    ////         res.status(err.code).json(err)
-    ////     }
-    //// }
+            console.log("RESULTADO USERS EN CONTROLLER => ", users)
+
+            return users
+        }
+        catch(err){
+            req.logger.fatal(err)
+            console.log(err)
+            res.sendError(err.message)
+        }
+    }
+
 
     // Traer usuario por ID
     async getUserById(req, res) {

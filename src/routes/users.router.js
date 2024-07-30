@@ -16,6 +16,17 @@ module.exports = () => {
 
     const router = Router()
 
+
+    // Todos los usuarios:
+    router.get("/", async (req, res) => {
+        const users = await controller.getUsers(req, res)
+        // res.send(users)
+        res.render("users", {
+            title: "All users",
+            users
+        })
+    })
+
     // Usuario premium
     router.get("/premium/:uid", userIsLoggedIn, async (req, res) => {
 

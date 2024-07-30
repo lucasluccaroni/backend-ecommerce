@@ -1,0 +1,24 @@
+<h1> USERS </h1>
+
+<ul>
+    {{#each users.docs}}
+    <li>First name: {{firstName}}</li>
+    <li>Last name: {{lastName}}</li>
+    <li>Age: {{age}}</li>
+    <li>Email: {{email}}</li>
+    <li>Cart: {{cart}}</li>
+    <li>Role: {{role}}</li>
+    <li>documents: {{documents}}</li>
+    <li>Last connection: {{last_connection}}</li>
+    {{/each}}
+</ul>
+
+
+{{#if users.hasPrevPage}}
+<a href="/users?page={{products.prevPage}}&limit={{products.limit}}"> Prev  </a>
+{{/if}}
+
+{{#if users.hasNextPage}}
+<a href="/users?page={{products.nextPage}}&limit={{products.limit}}"> Next </a>
+{{/if}}
+

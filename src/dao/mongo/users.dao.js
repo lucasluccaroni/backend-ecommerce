@@ -6,7 +6,7 @@ class UsersDAO {
     async getUsers() {
         try {
             const users = await UserModel.find()
-            return users.map(u => u.toObject())
+            return users?.map(u => u.toObject())
         }
         catch (err) {
             logger.error("Error en UsersDAO = getUsers => ", err)

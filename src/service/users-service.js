@@ -1,6 +1,9 @@
 const { hashPassword } = require("../utils/hashing")
 const { transport } = require("../utils/nodemailer")
 
+const UserModel = require("../dao/models/user.model")
+const { UsersDTO } = require("../dao/dtos/users.dto")
+
 const { ErrorCodes } = require("./errors/errorCodes")
 const { CustomError } = require("./errors/CustomError")
 const errors = require("./errors/errors")
@@ -15,37 +18,39 @@ class UsersService {
         this.dao = dao
     }
 
-    //// async resetPassword(email, password) {
+    async getUsers(query, sort, limit, page) {
 
-    ////     // Verifico que se haya ingresado email y password
-    ////     if (!email || !password) {
-    ////         throw CustomError.createError({
-    ////             name: "Invalid Credentials",
-    ////             cause: "Missing or Wrong credentials.",
-    ////             message: errors.generateInvalidCredentialsError(email, password),
-    ////             code: ErrorCodes.INVALID_TYPES_ERROR
-    ////         })
-    ////     }
+        let users = await this.dao.getUsers()
+        if (!users) {
+            throw CustomError.createError({
+                name: "Database Error",
+                cause: "Database problem caused failure in opreation",
+                message: errors.databaseProblem(),
+                code: ErrorCodes.DATABASE_ERROR
+            })
+        }
 
-    ////     // Busco al usuario
-    ////     const user = await this.dao.getUserByEmail(email)
-    ////     if (!user) {
-    ////         throw CustomError.createError({
-    ////             name: "Not Found ",
-    ////             cause: "User Not Found in Database",
-    ////             message: errors.generateInvalidUserEmailError(email),
-    ////             code: ErrorCodes.INVALID_TYPES_ERROR
-    ////         })
-    ////     }
+        // Paginacion para enviar al controller
+        users = await UserModel.paginate(
+            query,
+            {
+                sort: sort && { age: sort },
+                limit,
+                page,
+                lean: true
+            }
+        )
+        console.log("User-service - USERS DESPUES DE PAGINATE => ", users)
 
-    //     // Hasheo la contraseña
-    ////     const hashedPassword = hashPassword(password)
-    //     // Actuializo la nueva contraseña
-    ////     const resetPassword = await this.dao.resetUserPassword(email, hashedPassword)
-
-    ////     return resetPassword
-    //// }
-
+        // Transformacion de usuarios usando DTO
+        let usersTransformed = await users.docs.map(u => {
+            const dto = new UsersDTO(u)
+            const transformation = dto.transform()
+            return transformation
+        })
+        users.docs = usersTransformed
+        return users
+    }
 
     async sendResetEmail(email) {
 

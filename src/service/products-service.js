@@ -16,9 +16,13 @@ class ProductsService {
 
         let products = await this.dao.getProducts()
         if (!products) {
-            throw new Error("Someting went wrong!")
+            throw CustomError.createError({
+                name: "Database Error",
+                cause: "Database problem caused failure in opreation",
+                message: errors.databaseProblem(),
+                code: ErrorCodes.DATABASE_ERROR
+            })
         }
-
 
         // Paginacion para enviar al controller
         products = await ProductModel.paginate(
@@ -86,7 +90,7 @@ class ProductsService {
 
     async addProduct(productData, userEmail) {
 
-        const { title, description, code, price, status, stock, category} = productData
+        const { title, description, code, price, status, stock, category } = productData
 
         if (!title || !code || price < 0 || !price || stock < 0 || !category || !description || !status) {
             throw CustomError.createError({
@@ -156,8 +160,8 @@ class ProductsService {
         console.log("SERVICE - PRODUCT TO DELETE => ", productOwner)
 
         // Me fijo si el producto tiene como Owner al usuario que lo quiere eliminar. Solo puede eliminarlo la persona que lo creó Y EL ADMIN.
-        if(userEmail !== product.owner) {
-            if(userEmail === "admin@admin.com"){
+        if (userEmail !== product.owner) {
+            if (userEmail === "admin@admin.com") {
                 console.log("pase nomas, señor admin")
             } else {
                 throw CustomError.createError({
@@ -166,7 +170,7 @@ class ProductsService {
                     message: generateWrongOwnerError(),
                     code: ErrorCodes.UNAUTHORIZED
                 })
-            
+
             }
         }
         const deletedProduct = await this.dao.deleteProduct(id)
