@@ -17,27 +17,32 @@ const createUsersRouter = require("./routes/users.router")
 
 const app = express()
 
+// Configuracion de express
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(configureCustomResponses)
 
-
+// Estraategias passport
 const initializeStrategyLocal = require("./sessions-config/passport-local.config")
 const initializeStrategyGitHub = require("./sessions-config/passport-github.config")
 const sessionMiddleware = require("./session/mongoStorage")
 const { useLogger } = require("./logger/logger")
 
+// Middlewares e inicializacion de estrategias
 app.use(sessionMiddleware)
 initializeStrategyLocal()
 initializeStrategyGitHub()
 
+// Passport
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Swagger
 const swaggerJsDoc = require("swagger-jsdoc")
 const { serve, setup  } = require("swagger-ui-express")
 const _ = require("mongoose-paginate-v2")
 
+// Handlebars
 const handlebars = expressHandlebars.create({
     defaultLayout: "main",
     handlebars: require("handlebars"),
@@ -49,6 +54,10 @@ app.engine("handlebars", handlebars.engine)
 app.set("views", `${__dirname}/views`)
 app.set("view engine", "handlebars")
 
+// Public
+app.use(express.static(`${__dirname}/../public`))
+
+// Configuracion de swagger
 const dirname = `${__dirname}/../docs/**/*.yaml`
 const swaggerOptions = {
     definition: {
@@ -63,8 +72,10 @@ const swaggerOptions = {
 const specs = swaggerJsDoc(swaggerOptions)
 app.use("/apidocs", serve, setup(specs))
 
+// Logger personalizado
 app.use(useLogger)
 
+// Funcion main
 const main = async () => {
 
     await mongoose.connect(mongoUri, { dbName })

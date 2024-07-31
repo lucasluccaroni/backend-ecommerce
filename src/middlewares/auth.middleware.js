@@ -89,7 +89,7 @@ module.exports = {
 
         // Valido si es admin. Si NO es manda un error
         if (adminData.role !== sessionInfo.role) {
-            return res.status(401).json({ error: "User should be admin or premium!" })
+            return res.status(401).json({ error: "User should be admin!" })
         }
 
         next()

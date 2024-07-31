@@ -34,7 +34,7 @@ class ProductsService {
                 lean: true
             }
         )
-        logger.info("PRODUCTS DESPUES DE PAGINATE => ", products)
+        console.log("PRODUCTS DESPUES DE PAGINATE => ", products)
 
         // Transformacion de productos usando DTO
         let productsTransformed = await products.docs.map(p => {

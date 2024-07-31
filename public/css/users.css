@@ -1,0 +1,26 @@
+body {
+    background-color: rgb(139, 195, 254);
+}
+
+
+.caja {
+    background-color: rgb(229, 255, 156);
+    border: solid 3px;
+    width: fit-content;
+    padding: 5px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-direction: column;
+    margin: 10px
+}
+
+.boton-generico {
+    font-size: larger;
+    text-decoration: none;
+    padding: 3px;
+    border: solid 1px;
+    border-radius: 4px;
+    background-color: rgb(108, 245, 172);
+    cursor: grab;
+}

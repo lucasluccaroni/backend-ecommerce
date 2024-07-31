@@ -230,6 +230,12 @@ class UsersService {
         const lastConnection = await this.dao.updateLastConnection(userId, fechaHoraArg)
         return lastConnection
     }
+
+    // Borrar usuarios antiguos
+    async deleteOldUsers(){
+        const deleteOldUsers = await this.dao.deleteOldUsers()
+        return deleteOldUsers
+    }
 }
 
 

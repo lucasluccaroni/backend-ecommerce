@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const { userIsLoggedIn } = require("../middlewares/auth.middleware")
+const { userIsLoggedIn, userShouldBeAdmin } = require("../middlewares/auth.middleware")
 
 const { UsersDAO } = require("../dao/mongo/users.dao")
 const dao = new UsersDAO
@@ -16,14 +16,13 @@ module.exports = () => {
 
     const router = Router()
 
-
     // Todos los usuarios:
-    router.get("/", async (req, res) => {
+    router.get("/", /* userIsLoggedIn, userShouldBeAdmin,  */async (req, res) => {
         const users = await controller.getUsers(req, res)
-        // res.send(users)
         res.render("users", {
             title: "All users",
-            users
+            users,
+            style: "users.css"
         })
     })
 
@@ -34,12 +33,10 @@ module.exports = () => {
 
     })
 
-
     // Reset Password 1 (nuevo, con jwt) - Se envia un mail para restablecer la contraseña
     router.get("/newResetPassword", async (req, res) => {
         await controller.sendEmailToResetPassword(req, res)
     })
-
 
     // Reset Password 2 (nuevo, con jwt) - El mail contiene un link para restablecer la contraseña. El link es un form "post" que manda los datos hacia aca
     router.post("/reset-password", async (req, res) => {
@@ -47,12 +44,15 @@ module.exports = () => {
 
     })
 
-
     // Carga de documentos
     router.post("/:uid/documents", uploaderDocuments.array("documents", 3), async (req, res) => {
 
         await controller.uploadDocuments(req, res)
     })
 
+    // Borrar todos los usuarios con "ultima conexion" antigua
+    router.delete("/", async (req, res) => {
+        await controller.deleteOldUsers(req, res)
+    })
     return router
 }

@@ -83,7 +83,7 @@ class UsersDAO {
         try {
             const lastConnection = await UserModel.findOneAndUpdate(
                 { _id: userId },
-                { $push: { last_connection: fechaHoraArg } }
+                { $set: { last_connection: fechaHoraArg } }
             )
             return lastConnection
         }
@@ -91,6 +91,14 @@ class UsersDAO {
             logger.error("Error en UsersDAO - updateLastConnection => ", err)
             return null
         }
+    }
+
+    // Borrar usuarios antiguos
+    async deleteOldUsers() {
+        const deleteProcess = await UserModel.deleteMany({
+            last_connection: { $lt: new Date("2024-07-25T17:00:00.000Z").toDateString()}
+        })
+        return deleteProcess
     }
 }
 

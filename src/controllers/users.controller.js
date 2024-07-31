@@ -144,6 +144,21 @@ class UsersController {
             res.sendError(err.message)
         }
     }
+
+    // Borrar todos los usuarios con "ultima conexion" antigua
+    async deleteOldUsers(req, res) {
+        try{
+            const deleteOldUsers = await this.service.deleteOldUsers()
+            console.log("DELETE OLD USERS CONTROLLER => ", deleteOldUsers)
+            res.sendSuccess(`${deleteOldUsers.deletedCount} users has been successfully deleted.`)
+
+        }
+        catch(err) {
+            req.logger.fatal("CATCH EN CONTROLLER - deleteOldUsers", err)
+            req.logger.error(err.code)
+            res.sendError(err.message)
+        }
+    }
 }
 
 module.exports = { UsersController }
