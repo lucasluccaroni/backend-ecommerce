@@ -10,7 +10,7 @@ class UsersController {
 
     // Traer todos los usuarios
     async getUsers(req, res) {
-        try{
+        try {
             // Queries
             const limit = req.query.limit || 10
             const page = req.query.page || 1
@@ -19,11 +19,11 @@ class UsersController {
 
             const users = await this.service.getUsers(query, sort, limit, page)
 
-            console.log("RESULTADO USERS EN CONTROLLER => ", users)
+            // console.log("RESULTADO USERS EN CONTROLLER => ", users)
 
             return users
         }
-        catch(err){
+        catch (err) {
             req.logger.fatal(err)
             console.log(err)
             res.sendError(err.message)
@@ -114,31 +114,31 @@ class UsersController {
 
     // Carga de documentos para los users + guardarlos en la DB
     async uploadDocuments(req, res) {
-        try{
+        try {
             console.log(`ARCHIVO EN ${req.path}`)
             console.log(req.files)
-    
+
             const files = req.files
             const userId = req.session.user.id
             const uploadDocuments = await this.service.uploadDocuments(files, userId)
 
             res.sendSuccess("Image has been succesfully uploaded!")
         }
-        catch(err){
+        catch (err) {
             req.logger.fatal("CATCH EN CONTROLLER - uploadDocuments", err)
             req.logger.error(err.code)
             res.sendError(err.message)
         }
     }
-    
+
     // Actualizar la fecha de última conexion en la DB
     async updateLastConnection(req, res) {
         const userId = req.user.id
-        try{
-            const updateLastConnection =  await this.service.updateLastConnection(userId)
+        try {
+            const updateLastConnection = await this.service.updateLastConnection(userId)
             console.log(updateLastConnection)
         }
-        catch(err) {
+        catch (err) {
             req.logger.fatal("CATCH EN CONTROLLER - uploadDocuments", err)
             req.logger.error(err.code)
             res.sendError(err.message)
@@ -147,14 +147,51 @@ class UsersController {
 
     // Borrar todos los usuarios con "ultima conexion" antigua
     async deleteOldUsers(req, res) {
-        try{
+        try {
             const deleteOldUsers = await this.service.deleteOldUsers()
             console.log("DELETE OLD USERS CONTROLLER => ", deleteOldUsers)
-            res.sendSuccess(`${deleteOldUsers.deletedCount} users has been successfully deleted.`)
+
+            if (deleteOldUsers?.deletedCount >= 1) {
+                res.sendSuccess(`${deleteOldUsers.deletedCount} users has been successfully deleted.`)
+            } else {
+                res.sendSuccess("No users found to delete.")
+            }
 
         }
-        catch(err) {
+        catch (err) {
             req.logger.fatal("CATCH EN CONTROLLER - deleteOldUsers", err)
+            req.logger.error(err.code)
+            res.sendError(err.message)
+        }
+    }
+
+    // Borrar un usuario
+    async deleteOneUser(req, res) {
+        try {
+            const userId = req.params.uid
+            console.log(userId)
+
+            const deleteOneUser = await this.service.deleteOneUser(userId)
+            return deleteOneUser
+        }
+        catch (err) {
+            req.logger.fatal("CATCH EN CONTROLLER - deleteOneUser", err)
+            req.logger.error(err.code)
+            res.sendError(err.message)
+        }
+    }
+
+    // Cambiar el rol deun usuario (hecho por el admin)
+    async changeRoleAdmin(req, res) {
+        try {
+            const userId = req.params.uid
+            console.log("USER ID CHANGE ROLE => ", userId)
+
+            const changeRoleAdmin = await this.service.changeRoleAdmin(userId)
+            return changeRoleAdmin
+        }
+        catch (err) {
+            req.logger.fatal("CATCH EN CONTROLLER - changeRoleAdmin", err)
             req.logger.error(err.code)
             res.sendError(err.message)
         }

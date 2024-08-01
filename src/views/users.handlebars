@@ -2,16 +2,20 @@
 
 {{#each users.docs}}
 <div class="caja">
-    <h2> First name: {{firstName}} </h2>
-    <h2> Last name: {{lastName}} </h2>
-    <h3> Age: {{age}} </h3>
-    <h3> Email: {{email}} </h3>
-    <h4> Cart: {{cart}} </h4>
-    <h4> Role: {{role}} </h4>
-    <h4> Last connection: {{last_connection}} </h4>
-    <div>
+    <h4> ID: {{id}} </h4>
+    <h4> First name: {{firstName}} </h4>
+    <h4> Last name: {{lastName}} </h4>
+    <h5> Age: {{age}} </h5>
+    <h5> Email: {{email}} </h5>
+    <h5> Cart: {{cart}} </h5>
+    <h5> Role: {{role}} </h5>
+    <h5> Last connection: {{last_connection}} </h5>
+    <dv>
         documents: {{documents}}
-    </div>
+    </dv>
+
+    <button class="delete-button" data-id="{{id}}" > Delete </button>
+    <button class="role-button" data-id="{{id}}" > Switch Role </button>
 </div>
 {{/each}}
 
@@ -25,4 +29,4 @@
 <a href="/users?page={{users.nextPage}}&limit={{users.limit}}" class="boton-generico"> Next </a>
 {{/if}}
 
-<button onclick="deleteOldUsers()">Eliminar Usuarios Antiguos</button>
+{{!-- <button onclick="deleteOldUsers()">Eliminar Usuarios Antiguos</button> --}}

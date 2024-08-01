@@ -51,6 +51,7 @@ class UsersDAO {
     async changeRole(id, userRole) {
         try {
             const result = await UserModel.findByIdAndUpdate({ _id: id }, { $set: { role: userRole } })
+            return result
 
         }
         catch (err) {
@@ -94,11 +95,23 @@ class UsersDAO {
     }
 
     // Borrar usuarios antiguos
-    async deleteOldUsers() {
+    async deleteOldUsers(today) {
         const deleteProcess = await UserModel.deleteMany({
-            last_connection: { $lt: new Date("2024-07-25T17:00:00.000Z").toDateString()}
+            last_connection: { $lt: today }
         })
         return deleteProcess
+    }
+
+    // Borrar un usuario
+    async deleteOneUser(userId) {
+        try {
+            const deleteOneUser = await UserModel.findByIdAndDelete(userId)
+            return deleteOneUser
+        }
+        catch (err) {
+            logger.error("Error en UsersDAO - deleteOneUser => ", err)
+            return null
+        }
     }
 }
 

@@ -10,7 +10,7 @@ const service = new UsersService(dao)
 const { UsersController } = require("../controllers/users.controller")
 const controller = new UsersController(service)
 
-const {uploaderDocuments } = require("../middlewares/uploadFiles")
+const { uploaderDocuments } = require("../middlewares/uploadFiles")
 
 module.exports = () => {
 
@@ -22,7 +22,14 @@ module.exports = () => {
         res.render("users", {
             title: "All users",
             users,
-            style: "users.css"
+            styles: [
+                "users.css"
+            ],
+            scripts: [
+                "users.js"
+            ]
+            // style: "users.css",
+            // script: "users.js"
         })
     })
 
@@ -54,5 +61,17 @@ module.exports = () => {
     router.delete("/", async (req, res) => {
         await controller.deleteOldUsers(req, res)
     })
+
+    // Borrar un usuario
+    router.delete("/deleteOne/:uid", async (req, res) => {
+        const deleteOneUser = await controller.deleteOneUser(req, res)
+    })
+
+    // Cambiar el rol de un usuario (hecho por el admin)
+    router.put("/admin-changeRole/:uid", async (req, res) => {
+        await controller.changeRoleAdmin(req, res)
+
+    })
+
     return router
 }

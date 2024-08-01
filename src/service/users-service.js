@@ -40,7 +40,7 @@ class UsersService {
                 lean: true
             }
         )
-        console.log("User-service - USERS DESPUES DE PAGINATE => ", users)
+        // console.log("User-service - USERS DESPUES DE PAGINATE => ", users)
 
         // Transformacion de usuarios usando DTO
         let usersTransformed = await users.docs.map(u => {
@@ -232,15 +232,59 @@ class UsersService {
     }
 
     // Borrar usuarios antiguos
-    async deleteOldUsers(){
+    async deleteOldUsers() {
 
-        const today = newDate()
+        const today = new Date()
         today.setDate(today.getDate() - 30)
-        console.log(today)
-        
-        const deleteOldUsers = await this.dao.deleteOldUsers()
+
+        const deleteOldUsers = await this.dao.deleteOldUsers(today)
         return deleteOldUsers
     }
+
+    // Borrar un usuario
+    async deleteOneUser(userId) {
+
+        const user = await this.getUserById(userId)
+        if (!user) {
+            throw CustomError.createError({
+                name: "Not Found ",
+                cause: "User Not Found in Database",
+                message: errors.generateInvalidUserIdError(id),
+                code: ErrorCodes.INVALID_TYPES_ERROR
+            })
+        }
+
+        const deleteOneUser = await this.dao.deleteOneUser(userId)
+        return deleteOneUser
+    }
+
+    // Cambiar el rol deun usuario (hecho por el admin)
+    async changeRoleAdmin(userId) {
+
+        const user = await this.getUserById(userId)
+        if (!user) {
+            throw CustomError.createError({
+                name: "Not Found ",
+                cause: "User Not Found in Database",
+                message: errors.generateInvalidUserIdError(id),
+                code: ErrorCodes.INVALID_TYPES_ERROR
+            })
+        }
+        const userRole = user.role
+        logger.debug(`Role: ${userRole}`)
+
+        let newUserRole
+        if (userRole === "user") {
+            newUserRole = "premium"
+        } else if (userRole === "premium") {
+            newUserRole = "user"
+        }
+
+        // Mando al DAO la actualizacion de Rol
+        const changeRole = await this.dao.changeRole(userId, newUserRole)
+        return changeRole
+    }
+
 }
 
 
