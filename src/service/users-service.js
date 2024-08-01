@@ -233,6 +233,11 @@ class UsersService {
 
     // Borrar usuarios antiguos
     async deleteOldUsers(){
+
+        const today = newDate()
+        today.setDate(today.getDate() - 30)
+        console.log(today)
+        
         const deleteOldUsers = await this.dao.deleteOldUsers()
         return deleteOldUsers
     }
