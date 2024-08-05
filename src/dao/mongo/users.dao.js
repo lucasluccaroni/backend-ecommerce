@@ -95,9 +95,9 @@ class UsersDAO {
     }
 
     // Borrar usuarios antiguos
-    async deleteOldUsers(today) {
+    async deleteOldUsers(date) {
         const deleteProcess = await UserModel.deleteMany({
-            last_connection: { $lt: today }
+            last_connection: { $lt: date }
         })
         return deleteProcess
     }

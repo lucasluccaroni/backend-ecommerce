@@ -6,6 +6,8 @@ const { ErrorCodes } = require("./errors/errorCodes")
 const { generateInvalidProductIdError, generateInvalidProductDataError, generateWrongOwnerError } = require("./errors/errors")
 const errors = require("./errors/errors")
 const { logger } = require("../logger/logger")
+const { transport } = require("../utils/nodemailer")
+
 
 class ProductsService {
     constructor(dao) {
@@ -155,14 +157,17 @@ class ProductsService {
 
     async deleteProduct(id, userEmail) {
 
+        // Busco el producto
         const product = await this.getProductById(id)
         const productOwner = product.owner
         console.log("SERVICE - PRODUCT TO DELETE => ", productOwner)
 
         // Me fijo si el producto tiene como Owner al usuario que lo quiere eliminar. Solo puede eliminarlo la persona que lo creó Y EL ADMIN.
         if (userEmail !== product.owner) {
+
             if (userEmail === "admin@admin.com") {
                 console.log("pase nomas, señor admin")
+
             } else {
                 throw CustomError.createError({
                     name: "This Product is not yours!",
@@ -170,9 +175,9 @@ class ProductsService {
                     message: generateWrongOwnerError(),
                     code: ErrorCodes.UNAUTHORIZED
                 })
-
             }
         }
+
         const deletedProduct = await this.dao.deleteProduct(id)
 
         if (!deletedProduct) {
@@ -193,7 +198,22 @@ class ProductsService {
             })
         }
 
+        // Si el producto se eliminó y no es del admin,  le mando un correo al owner avisandole.
+        if(userEmail !== "admin@admin.com")
+        transport.sendMail({
+            from: "luccaroni@gmail.com",
+            to: `${productOwner}`,
+            subject: "Un producto suyo fue eliminado.",
+            html: `
+                <div>
+                    <h2> Producto eliminado. ID: ${product.id} </h2>
+                    <p> El producto '${product.title}', creado por usted, fue eliminado de la base de datos del sistema. </a>
+                </div>
+                `
+        })
+
         logger.debug("DELETED PRODUCT SERVICE", deletedProduct.deletedCount)
+
         return (deletedProduct)
     }
 

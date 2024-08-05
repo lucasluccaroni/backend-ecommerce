@@ -234,10 +234,44 @@ class UsersService {
     // Borrar usuarios antiguos
     async deleteOldUsers() {
 
-        const today = new Date()
-        today.setDate(today.getDate() - 30)
+        const emails = []
 
-        const deleteOldUsers = await this.dao.deleteOldUsers(today)
+        const dosDias = new Date()
+        dosDias.setDate(dosDias.getDate() - 2)
+
+        // Busco los usuarios que tengan una last_connection menor a la establecida.
+        const usersToDelete = await UserModel.find(
+            { last_connection: { $lt: dosDias } }
+        )
+
+        console.log("USUARIOS A BORRAR => ", usersToDelete)
+
+        const deleteOldUsers = await this.dao.deleteOldUsers(dosDias)
+
+        // Si el dao elimina uno o mas usuarios, les extraigo su email en un array para mandarles un correo.
+        if (deleteOldUsers.deletedCount >= 1) {
+
+            usersToDelete.forEach(user => {
+                emails.push(user.email)
+            })
+
+            emails.forEach(email => {
+
+                transport.sendMail({
+                    from: "luccaroni@gmail.com",
+                    to: `${email}`,
+                    subject: "Cuenta eliminada por inactividad.",
+                    html: `
+                        <div>
+                            <h2> Tu cuenta ha sido eliminada. </h2>
+                            <p> Por inactividad y falta de conexión, tu cuenta fue eliminada de nuestro sistema. </p>
+                            <p> Saludos. </p> 
+                        </div>
+                        `
+                })
+            })
+        }
+
         return deleteOldUsers
     }
 
