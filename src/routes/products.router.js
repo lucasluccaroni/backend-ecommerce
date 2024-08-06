@@ -22,7 +22,10 @@ module.exports = () => {
 
         res.render("products", {
             title: "Products!",
-            products
+            products,
+            styles: [
+                "products.css"
+            ]
         })
     })
 

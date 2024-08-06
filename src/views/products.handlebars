@@ -1,22 +1,30 @@
 <h1> PRODUCTS </h1>
-<div> Current Page: {{products.page}} </div>
-<div> Total pages: {{products.totalPages}} </div>
+<h3> Current Page: {{products.page}} </h3>
+<h3> Total pages: {{products.totalPages}} </h3>
 
-<ul>
+<div class="contenedor">
     {{#each products.docs}}
-    <li> Title: {{title}} -- Desc: {{description}} -- ${{price}} -- Stock: {{stock}}u. -- Category: {{category}} </li>
+    <div class="tarjeta">
+        <h3> Title: {{title}} </h3>
+        <h4> Description: {{description}} </h4>
+        <h4> Price: ${{price}} </h4>
+        <h4> Stock: {{stock}}u. </h4>
+        <h5> Email: {{email}} </h5>
+        <h5> Category: {{category}} </h5>
+
+        <a href="/add-product/{{id}}" class="boton-generico"> Añadir al carrito </a>
+    </div>
     {{/each}}
-</ul>
+</div>
 
 {{#if products.hasPrevPage}}
-<a href="/api/products?page={{products.prevPage}}&limit={{products.limit}}"> Prev  </a>
+<a href="/api/products?page={{products.prevPage}}&limit={{products.limit}}"  class="boton-generico"> Prev </a>
 {{/if}}
 
 {{#if products.hasNextPage}}
-<a href="/api/products?page={{products.nextPage}}&limit={{products.limit}}"> Next </a>
+<a href="/api/products?page={{products.nextPage}}&limit={{products.limit}}"  class="boton-generico"> Next </a>
 {{/if}}
 
 
-<p> To upload a product Image, go to: "/upload-product-images/:pid"</p>
-<a href="/"> Home </a>
-
+<h4> To upload a product Image, go to: "/upload-product-images/:pid"</h4>
+<a href="/" class="boton-generico"> Home </a>

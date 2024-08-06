@@ -7,8 +7,13 @@ module.exports = {
     userIsLoggedIn: (req, res, next) => {
         // el usuario debe tener una sesion iniciada
         const isLoggedIn = ![null, undefined].includes(req.session.user)
+
         if (!isLoggedIn) {
-            return res.status(401).json({ error: "User should be logged in!" })
+            req.session.destroy
+            return res.render("notLoggedIn", {
+                title: "ERROR"
+            })
+            // return res.status(401).json({ error: "User should be logged in!" })
         }
         next()
     },
@@ -120,7 +125,7 @@ module.exports = {
 
             default:
                 const user = await usersDAO.getUserByEmail(sessionInfo)
-                logger.info("USER EN SWITCH => ", user )
+                logger.info("USER EN SWITCH => ", user)
 
                 if (user.role !== "premium") {
                     return res.status(403).json({ error: "User should be admin or premium!" })

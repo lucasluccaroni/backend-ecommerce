@@ -1,23 +1,26 @@
 <h1> USERS </h1>
 
-{{#each users.docs}}
-<div class="caja">
-    <h4> ID: {{id}} </h4>
-    <h4> First name: {{firstName}} </h4>
-    <h4> Last name: {{lastName}} </h4>
-    <h5> Age: {{age}} </h5>
-    <h5> Email: {{email}} </h5>
-    <h5> Cart: {{cart}} </h5>
-    <h5> Role: {{role}} </h5>
-    <h5> Last connection: {{last_connection}} </h5>
-    <dv>
-        documents: {{documents}}
-    </dv>
+<div class="contenedor">
+    {{#each users.docs}}
+    <div class="tarjeta">
+        <h4> ID: {{id}} </h4>
+        <h4> First name: {{firstName}} </h4>
+        <h4> Last name: {{lastName}} </h4>
+        <h5> Age: {{age}} </h5>
+        <h5> Email: {{email}} </h5>
+        <h5> Cart: {{cart}} </h5>
+        <h5> Role: {{role}} </h5>
+        <h5> Last connection: {{last_connection}} </h5>
+        <dv>
+            documents: {{documents}}
+        </dv>
 
-    <button class="delete-button" data-id="{{id}}" > Delete </button>
-    <button class="role-button" data-id="{{id}}" > Switch Role </button>
+        <button class="delete-button" data-id="{{id}}" class="boton-generico"> Delete </button>
+        <button class="role-button" data-id="{{id}}" class="boton-generico"> Switch Role </button>
+    </div>
+    {{/each}}
+
 </div>
-{{/each}}
 
 
 

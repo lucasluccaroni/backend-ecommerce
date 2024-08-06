@@ -10,15 +10,26 @@ module.exports = () => {
 
 
     // HOME
-    router.get("/", (req, res) => {
+    router.get("/", async (req, res) => {
+
         req.logger.info("Info de session en HOME => ", req.session.user)
         const isLoggedIn = ![null, undefined].includes(req.session.user)
 
+        let cartId
+        if(isLoggedIn) {
+            const user = await usersDAO.getUserById(req.session.user.id)
+            cartId = user.cart.toString()
+            console.log(cartId)
+        }
 
         res.render("index", {
             title: "Home",
             isLoggedIn,
-            isNotLoggedIn: !isLoggedIn
+            cartId,
+            isNotLoggedIn: !isLoggedIn,
+            styles: [
+                "index.css"
+            ]
         })
     })
 

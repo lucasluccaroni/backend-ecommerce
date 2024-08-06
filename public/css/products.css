@@ -6,15 +6,14 @@ body {
     display: flex;
 }
 
-
 .tarjeta {
     background-color: rgb(229, 255, 156);
     border: solid 3px;
-    width: fit-content;
+    width: 300px;
     padding: 5px;
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
     margin: 10px;
 }
