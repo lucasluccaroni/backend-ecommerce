@@ -65,6 +65,5 @@ module.exports = () => {
         await controller.uploadImages(req, res)
     })
 
-
     return router
 }

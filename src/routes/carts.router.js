@@ -8,8 +8,16 @@ const { CartsService } = require("../service/carts-service")
 const service = new CartsService(dao)
 
 const { CartsController } = require("../controllers/carts.controllers")
-const { userShouldNotBeAdmin, userIsLoggedIn } = require("../middlewares/auth.middleware")
 const controller = new CartsController(service)
+
+const { ProductsDAO } = require("../dao/mongo/products.dao")
+const productsDAO = new ProductsDAO()
+
+const { UsersDAO } = require("../dao/mongo/users.dao")
+const usersDAO = new UsersDAO()
+
+const { userShouldNotBeAdmin, userIsLoggedIn } = require("../middlewares/auth.middleware")
+
 
 module.exports = () => {
 
@@ -24,7 +32,10 @@ module.exports = () => {
 
         res.render("cart", {
             title: "Cart",
-            cart
+            cart,
+            styles: [
+                "cart.css"
+            ]
         })
     })
 
@@ -54,6 +65,26 @@ module.exports = () => {
 
     router.post("/:cid/purchase", userIsLoggedIn, (req, res) => {
         controller.purchaseCart(req, res)
+    })
+
+    // Vista de añadir un producto al carrito
+    router.get("/add-product/:pid", async (req, res) => {
+        
+        const user = await usersDAO.getUserById(req.session.user.id)
+        
+        const cid = user.cart.toString()
+        const pid = req.params.pid
+
+        const product = await productsDAO.getProductById(pid)
+        console.log(product)
+
+        res.render("add-product-to-cart", {
+            title: "Add product to cart",
+            cid,
+            product
+
+        }
+        )
     })
 
     return router

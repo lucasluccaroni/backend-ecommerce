@@ -109,7 +109,8 @@ class CartsService {
     async addProductToExistingCart(cartId, productId, quantity, userInfo) {
         // try {
         let productExistInCart
-
+        quantity = +quantity
+        console.log("TYPE OF QUANTITY", typeof(quantity), quantity )
         // Busco el carrito
         const cart = await CartModel.findOne({ _id: cartId })
         if (!cart) {
@@ -178,7 +179,7 @@ class CartsService {
         let found = cart.products.find(productToAdd => {
             return (productToAdd._id.toString() === productId)
         })
-        logger.info("BUSQUEDA SERVICE => ", found)
+        console.log("BUSQUEDA SERVICE => ", found)
 
 
         // Si no existe, lo agrego al carrito
@@ -200,7 +201,7 @@ class CartsService {
 
             // Si existe, sumo la cantidad ingresada + la que que tenia y actualizo el producto    
         } else if (found) {
-            logger.info("FOUND ENCONTRADO => ", found)
+            console.log("FOUND ENCONTRADO => ", found)
 
             // Verifico la cantidad actual, la que se quiere actualizar y el stock disponible
             if (found.quantity < 0 || quantity < 0 || quantity > productToAdd.stock) {
@@ -211,8 +212,10 @@ class CartsService {
                     code: ErrorCodes.INVALID_TYPES_ERROR
                 })
             }
-
-            quantity += found.quantity
+            found.quantity = +found.quantity
+            console.log( "TYPE OF FOUND.QUANTITY", typeof(found.quantity), found.quantity)
+            quantity = quantity + found.quantity
+            console.log("NUEVA CANTIDAD => ", quantity )
             productExistInCart = true
 
             const cartUpdate = this.dao.addProductToExistingCart(productExistInCart, cartId, productId, quantity)

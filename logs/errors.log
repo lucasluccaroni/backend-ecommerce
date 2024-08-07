@@ -39,3 +39,6 @@
 {"level":"error"}
 {"level":"fatal","message":"CATCH EN CONTROLLER - deleteOneUser id is not defined","stack":"ReferenceError: id is not defined\n    at UsersService.deleteOneUser (D:\\CODERHOUSE\\BACKEND\\PROYECTO FINAL\\src\\service\\users-service.js:286:60)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async UsersController.deleteOneUser (D:\\CODERHOUSE\\BACKEND\\PROYECTO FINAL\\src\\controllers\\users.controller.js:174:35)\n    at async D:\\CODERHOUSE\\BACKEND\\PROYECTO FINAL\\src\\routes\\users.router.js:67:31"}
 {"level":"error"}
+{"level":"fatal","message":"success is not defined"}
+{"level":"fatal","message":"Cannot read properties of undefined (reading 'toString')"}
+{"level":"fatal","message":"Cannot read properties of undefined (reading 'toString')"}

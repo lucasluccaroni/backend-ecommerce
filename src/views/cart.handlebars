@@ -1,10 +1,11 @@
-<div> CART </div>
-<div> Cart ID: {{cart.id}} </div>
+<h1> CART </h1>
+<h2> Cart ID: {{cart.id}} </h2>
 
 {{#each cart.products}}
-<ul>
+<ul class="lista-generica">
     <li> {{id}} - Cantidad: {{quantity}} </li>
 </ul>
 {{/each}}
 
-<a href="/api/products"> Products </a>
+<a href="/api/products" class="boton-generico"> Products </a>
+<a href="" class="boton-generico "> Buy cart </a>

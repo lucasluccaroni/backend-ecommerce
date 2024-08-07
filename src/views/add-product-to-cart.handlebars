@@ -1,0 +1,15 @@
+<h1> Add this product to your cart </h1>
+
+<div>
+    <h2> Title: {{product.title}} </h2>
+    <h2> Price: ${{product.price}} </h2>
+</div>
+
+<div>
+    <form action="/api/carts/{{cid}}/products/{{product._id}}" method="post" enctype="application/x-www-form-urlencoded">
+        <label for="_quantity"> Quantity </label>
+        <input type="number" id="_quantity" name="quantity">
+
+        <button type="submit" > Add </button>
+    </form>
+</div>

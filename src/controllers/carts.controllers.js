@@ -59,7 +59,10 @@ class CartsController {
 
             const result = await this.service.addProductToExistingCart(cartId, productId, quantity, userInfo)
 
-            res.sendSuccess(result)
+            res.render("add-product-success",{
+                title: "success"
+            })
+            // res.sendSuccess(result)
         }
         catch (err) {
             logger.fatal(err.message)
