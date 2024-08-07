@@ -1,12 +1,22 @@
 <h1> CART </h1>
 <h2> Cart ID: {{cart.id}} </h2>
 
+<div class="contenedor" >
 {{#each cart.products}}
-<ul class="lista-generica">
-    <li> {{id}} - Cantidad: {{quantity}} </li>
-</ul>
-<a href="/api/carts/update-product-in-cart/{{id}}"> Update quantity </a>
+    <div class="tarjeta">
+        <h3>ID: {{id}} </h3>
+        <h3>Cantindad: {{quantity}} </h3>
+        <a href="/api/carts/update-product-in-cart/{{id}}" class="boton-generico"> Update quantity </a>
+        <a href="/api/carts/delete-product-in-cart/{{id}}" class="boton-generico"> Delete </a>
+    </div>
 {{/each}}
+</div>
 
+
+<br>
+<br>
+<button id="clear-button" data-id="{{cart.id}}" class="boton-generico" > Clear Cart</button>
 <a href="/api/products" class="boton-generico"> Products </a>
-<a href="" class="boton-generico "> Buy cart </a>
+
+<button id="buy-cart" data-id="{{cart.id}}" > Buy Cart</button>
+{{!-- <a href="" class="boton-generico "> Buy cart </a> --}}

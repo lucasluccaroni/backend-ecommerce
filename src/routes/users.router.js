@@ -17,7 +17,7 @@ module.exports = () => {
     const router = Router()
 
     // Todos los usuarios:
-    router.get("/", /* userIsLoggedIn, userShouldBeAdmin,  */async (req, res) => {
+    router.get("/", userIsLoggedIn, userShouldBeAdmin, async (req, res) => {
         const users = await controller.getUsers(req, res)
         res.render("users", {
             title: "All users",
@@ -28,8 +28,6 @@ module.exports = () => {
             scripts: [
                 "users.js"
             ]
-            // style: "users.css",
-            // script: "users.js"
         })
     })
 
@@ -58,17 +56,17 @@ module.exports = () => {
     })
 
     // Borrar todos los usuarios con "ultima conexion" antigua
-    router.delete("/", async (req, res) => {
+    router.delete("/", userIsLoggedIn, userShouldBeAdmin,async (req, res) => {
         await controller.deleteOldUsers(req, res)
     })
 
     // Borrar un usuario
-    router.delete("/deleteOne/:uid", async (req, res) => {
-        const deleteOneUser = await controller.deleteOneUser(req, res)
+    router.delete("/deleteOne/:uid", userIsLoggedIn, userShouldBeAdmin, (req, res) => {
+        controller.deleteOneUser(req, res)
     })
 
     // Cambiar el rol de un usuario (hecho por el admin)
-    router.put("/admin-changeRole/:uid", async (req, res) => {
+    router.put("/admin-changeRole/:uid", userIsLoggedIn, userShouldBeAdmin, async (req, res) => {
         await controller.changeRoleAdmin(req, res)
 
     })

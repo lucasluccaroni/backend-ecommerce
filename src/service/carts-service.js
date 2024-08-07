@@ -221,11 +221,6 @@ class CartsService {
             const cartUpdate = this.dao.addProductToExistingCart(productExistInCart, cartId, productId, quantity)
             return cartUpdate
         }
-        // }
-        // catch (err) {
-        //     console.log(err)
-        //     throw new Error(err)
-        // }
     }
 
     async updateProductFromExistingCart(cartId, productId, quantity, userInfo) {
@@ -425,6 +420,9 @@ class CartsService {
             amount: totalAmount,
             purchaser: user.email
         })
+
+        // Vacio el carrito del user
+        await this.clearCart(cartId)
 
         return ticket
     }

@@ -1,6 +1,7 @@
 
 const botonDelete = document.addEventListener("DOMContentLoaded", () => {
     const deleteButtons = document.querySelectorAll(".delete-button")
+
     deleteButtons.forEach((button) => {
         button.addEventListener("click", async (e) => {
             const userId = e.target.getAttribute("data-id")
@@ -13,7 +14,7 @@ const botonDelete = document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             catch (err) {
-                console.log("ERROR EN FETCH")
+                console.log("ERROR EN FETCH deleteOneUser")
                 console.log(err.message)
             }
         })

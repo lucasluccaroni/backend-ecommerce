@@ -42,3 +42,12 @@
 {"level":"fatal","message":"success is not defined"}
 {"level":"fatal","message":"Cannot read properties of undefined (reading 'toString')"}
 {"level":"fatal","message":"Cannot read properties of undefined (reading 'toString')"}
+{"level":"fatal","message":"Recieved 600 quantity. It must be less than product's stock."}
+{"level":"fatal","message":"Recieved -1 quantity. It must be less than product's stock."}
+{"level":"fatal","message":"Recieved 600 quantity. It must be less than product's stock."}
+{"level":"fatal","message":"Recieved 900 quantity. It must be less than product's stock."}
+{"level":"fatal","message":" Invalid product data. ID: Should be an MongoObjectId. Recived: 66564e5315b1e0adde487d56 (string)"}
+{"level":"fatal","message":"Recieved 500 quantity. It must be less than product's stock."}
+{"level":"fatal","message":"Recieved 700 quantity. It must be less than product's stock."}
+{"level":"fatal","message":"ticket is not defined"}
+{"level":"fatal","message":" Invalid cart data. ID: Should be an MongoObjectId. Recived: [object Object] (object)"}

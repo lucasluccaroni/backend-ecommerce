@@ -1,0 +1,14 @@
+body {
+    background-color: rgb(139, 195, 254);
+}
+
+.boton-generico {
+    font-size: larger;
+    text-decoration: none;
+    padding: 3px;
+    border: solid 1px;
+    border-radius: 4px;
+    background-color: rgb(108, 245, 172);
+    cursor: grab;
+    width: fit-content;
+}

@@ -10,20 +10,11 @@ body {
     border-radius: 4px;
     background-color: rgb(108, 245, 172);
     cursor: grab;
+    width: fit-content;
 }
 
-.contenedor{
+.lista{
     display: flex;
-}
-
-.tarjeta {
-    background-color: rgb(229, 255, 156);
-    border: solid 3px;
-    width: 300px;
-    padding: 5px;
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
     flex-direction: column;
     margin: 10px;
 }

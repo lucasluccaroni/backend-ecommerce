@@ -23,6 +23,18 @@ module.exports = () => {
 
     const router = Router()
 
+    router.post("/:cid/products/:pid", userIsLoggedIn ,(req, res, next) => {
+        console.log("BODY => ", req.body)
+
+        if (req.body._method === "PUT") {
+            req.method = "PUT"
+
+        } else if (req.body._method === "DELETE") {
+            req.method = "DELETE"
+        }
+        next()
+    })
+
     router.get("/", userIsLoggedIn, (req, res) => {
         controller.getCarts(req, res)
     })
@@ -35,6 +47,10 @@ module.exports = () => {
             cart,
             styles: [
                 "cart.css"
+            ],
+            scripts: [
+                "clearCart.js",
+                "buyCart.js"
             ]
         })
     })
@@ -69,26 +85,27 @@ module.exports = () => {
 
     // Vista de añadir un producto al carrito
     router.get("/add-product/:pid", userIsLoggedIn, async (req, res) => {
-        
+
         const user = await usersDAO.getUserById(req.session.user.id)
-        
+
         const cid = user.cart.toString()
         const pid = req.params.pid
 
         const product = await productsDAO.getProductById(pid)
-        console.log(product)
 
         res.render("add-product-to-cart", {
             title: "Add product to cart",
             cid,
-            product
+            product,
+            styles: [
+                "updateProductInCart.css"
+            ]
         })
     })
 
     // Vista de editar la cantidad de un producto del carrito
-    //! Hacer un fetch en un .js dentro de "public" para hacer un method: put y meterlo en el render. Lo mismo con el delete. Mirar como hice el de users de referencia
     router.get("/update-product-in-cart/:pid", userIsLoggedIn, async (req, res) => {
-        
+
         const pid = req.params.pid
         const product = await productsDAO.getProductById(pid)
 
@@ -98,9 +115,31 @@ module.exports = () => {
         res.render("update-product-in-cart", {
             title: "Update product quantity",
             cid,
-            product
+            product,
+            styles: [
+                "updateProductInCart.css"
+            ]
         })
-    } )
+    })
+
+    // Vista de elimnar un producto del carrito
+    router.get("/delete-product-in-cart/:pid", userIsLoggedIn, async (req, res) => {
+
+        const pid = req.params.pid
+        const product = await productsDAO.getProductById(pid)
+
+        const user = await usersDAO.getUserById(req.session.user.id)
+        const cid = user.cart.toString()
+
+        res.render("delete-product-in-cart", {
+            title: "Delete product",
+            cid,
+            product,
+            styles: [
+                "deleteProductInCart.css"
+            ]
+        })
+    })
 
     return router
 }

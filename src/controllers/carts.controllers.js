@@ -62,7 +62,6 @@ class CartsController {
             res.render("add-product-success",{
                 title: "success"
             })
-            // res.sendSuccess(result)
         }
         catch (err) {
             logger.fatal(err.message)
@@ -81,7 +80,10 @@ class CartsController {
 
             const result = await this.service.updateProductFromExistingCart(cartId, productId, quantity, userInfo)
 
-            res.sendSuccess(result)
+            res.render("update-product-success",{
+                title: "success",
+                cartId
+            })
         }
         catch (err) {
             logger.fatal(err.message)
@@ -97,7 +99,10 @@ class CartsController {
 
             const result = await this.service.deleteProductFromExistingCart(cartId, productId)
 
-            res.sendSuccess(result)
+            res.render("delete-product-success",{
+                title: "success",
+                cartId
+            })            
         }
         catch (err) {
             logger.fatal(err.message)
@@ -138,8 +143,14 @@ class CartsController {
             logger.info("INFO DEL USER EN purchaseCart CONTROLLER => ", userInfo)
 
             const cartId = req.params.cid
-            const result = await this.service.purchaseCart(cartId, userInfo)            
-            res.sendSuccess(result)
+            const ticket = await this.service.purchaseCart(cartId, userInfo)   
+            
+            res.render("purchase", {
+                title: "Success!",
+                ticket
+
+            })
+            // res.sendSuccess(ticket)
         }
         catch(err){
             logger.fatal(err.message)
