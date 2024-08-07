@@ -68,7 +68,7 @@ module.exports = () => {
     })
 
     // Vista de añadir un producto al carrito
-    router.get("/add-product/:pid", async (req, res) => {
+    router.get("/add-product/:pid", userIsLoggedIn, async (req, res) => {
         
         const user = await usersDAO.getUserById(req.session.user.id)
         
@@ -82,10 +82,25 @@ module.exports = () => {
             title: "Add product to cart",
             cid,
             product
-
-        }
-        )
+        })
     })
+
+    // Vista de editar la cantidad de un producto del carrito
+    //! Hacer un fetch en un .js dentro de "public" para hacer un method: put y meterlo en el render. Lo mismo con el delete. Mirar como hice el de users de referencia
+    router.get("/update-product-in-cart/:pid", userIsLoggedIn, async (req, res) => {
+        
+        const pid = req.params.pid
+        const product = await productsDAO.getProductById(pid)
+
+        const user = await usersDAO.getUserById(req.session.user.id)
+        const cid = user.cart.toString()
+
+        res.render("update-product-in-cart", {
+            title: "Update product quantity",
+            cid,
+            product
+        })
+    } )
 
     return router
 }
