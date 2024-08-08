@@ -47,7 +47,7 @@ module.exports = () => {
     })
 
     // Actualizar un producto existente
-    router.put("/:pid", userIsLoggedIn, userShouldBeAdmin, (req, res) => {
+    router.put("/:pid", userIsLoggedIn, userShouldBeAdminOrPremium, (req, res) => {
         req.logger.info("Info de session en UPDATE: ", req.session.user)
 
         controller.updateProduct(req, res)

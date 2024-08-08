@@ -16,9 +16,13 @@ module.exports = () => {
 
         let cartId
         if(isLoggedIn) {
-            const user = await usersDAO.getUserById(req.session.user.id)
-            cartId = user.cart.toString()
-            console.log(cartId)
+            if(req.session.user.email === "admin@admin.com") {
+                console.log("Bienvenido admin")
+            } else {
+                const user = await usersDAO.getUserById(req.session.user.id)
+                cartId = user.cart.toString()
+                console.log(cartId)
+            }
         }
 
         res.render("index", {

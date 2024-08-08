@@ -36,6 +36,7 @@ module.exports = {
             email: "admin@admin.com",
             password: "admin",
             role: "admin",
+            cart: "1",
             id: 1
         }
         // Si es admin, lo autentifica y redirige a profile
@@ -58,6 +59,7 @@ module.exports = {
             email: "admin@admin.com",
             password: "admin",
             role: "admin",
+            cart: 1,
             id: 1
         }
 
@@ -83,6 +85,7 @@ module.exports = {
             email: "admin@admin.com",
             password: "admin",
             role: "admin",
+            cart: 1,
             id: 1
         }
 
@@ -108,6 +111,7 @@ module.exports = {
             email: "admin@admin.com",
             password: "admin",
             role: "admin",
+            cart: 1,
             id: 1
         }
 
