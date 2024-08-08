@@ -1,5 +1,8 @@
 const mocha = require("mocha")
 const supertest = require("supertest")
+const mongoose = require("mongoose")
+
+// RECORDAR DUPLICAR CONSOLA. EN UNA ENCENDER LA APLICACIÓN - EN LA OTRA SE PRUEBAN LOS TESTS.
 
 describe("TESTING SESSIONS", async () => {
 
@@ -23,11 +26,19 @@ describe("TESTING SESSIONS", async () => {
         password: "prueba2",
     }
 
-    // Inicializacion e importacion de librerias.
     before(async () => {
-        chai = await import("chai");
-        expect = chai.expect;
-        requester = supertest("http://localhost:8080");
+        // Inicializacion e importacion de librerias.
+        chai = await import("chai")
+        expect = chai.expect
+        requester = supertest("http://localhost:8080")
+        const mongooseConnection = await mongoose.connect('mongodb://localhost:27017', { dbName: 'base-dev' });
+        connection = mongooseConnection.connection
+    })
+
+    after(async () => {
+        // Al final de la prueba borro la DB.
+        await mongoose.connection.db.collection("users").deleteMany({})
+        await mongoose.connection.close()
     })
 
     //- 1. register
@@ -37,11 +48,11 @@ describe("TESTING SESSIONS", async () => {
 
         expect(registerUser.status).to.equal(302)
 
-
     })
 
-    //- 2. loging
-    it("Logging user, debe loggear correctamente + current", async () => {
+    //- 2. Loging 
+    //- 3. Enpoint Current
+    it("Logging user, debe loggear correctamente + ir al endpoint current", async () => {
 
         const logging = await requester.post("/api/sessions/login")
             .send({
@@ -51,20 +62,15 @@ describe("TESTING SESSIONS", async () => {
 
         expect(logging.status).to.equals(302)
         expect(logging.headers['set-cookie']).to.exist
-        
-        
-        //2.  obtengo la info de sesion y la mando al current para devolver la info del usuario en el endpoint /current
+
+
+        //2. Obtengo la info de sesion y la mando al current para devolver la info del usuario en el endpoint /current
         const cookieResult = logging.headers["set-cookie"][0]
 
         const currentEndpoint = await requester.get("/api/sessions/current")
             .set("Cookie", [cookieResult])
-        
-        console.log(currentEndpoint)
-            expect(currentEndpoint.ok).to.be.true
-            expect(currentEndpoint._body.email).to.be.equals(mockUser.email)
 
-
-
+        expect(currentEndpoint.ok).to.be.true
+        expect(currentEndpoint._body.email).to.be.equals(mockUser.email)
     })
-
 }) 

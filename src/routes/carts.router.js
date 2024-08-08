@@ -1,5 +1,4 @@
 const { Router } = require("express")
-// let { userShouldNotBeAdmin, userIsLoggedIn } = require("../middlewares/auth.middleware")
 
 const { CartsDAO } = require("../dao/mongo/carts.dao")
 const dao = new CartsDAO()
@@ -23,8 +22,7 @@ module.exports = () => {
 
     const router = Router()
 
-    router.post("/:cid/products/:pid", userIsLoggedIn ,(req, res, next) => {
-        console.log("BODY => ", req.body)
+    router.post("/:cid/products/:pid", userIsLoggedIn, (req, res, next) => {
 
         if (req.body._method === "PUT") {
             req.method = "PUT"

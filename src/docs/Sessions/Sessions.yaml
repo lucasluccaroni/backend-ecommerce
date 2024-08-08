@@ -78,7 +78,7 @@ paths:
       tags:
         - Sessions
       responses:
-        "200": 
+        "200":
           description: Operacion exitosa. Se redirecciona el usuario con su sesion iniciada a la vista "/profile"
   /api/sessions/logout:
     get:
@@ -135,7 +135,7 @@ paths:
                 cause:
                   type: string
                   example: User Not Found in Database
-                message: 
+                message:
                   type: string
                   example: "Invalid user data. ID: Should be an MongoObject. Recived: test@test.com (string)"
         "401":
@@ -154,8 +154,6 @@ paths:
                   message:
                     type: string
                     example: You can't set the same password as new password! Try another one.
-
-
 
 components:
   schemas:

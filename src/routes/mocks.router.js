@@ -11,7 +11,7 @@ module.exports = () => {
         for (let i = 0; i <= 100; i++) {
             products.push(generateProduct())
         }
-        
+
         res.json(products)
     })
 

@@ -1,7 +1,6 @@
 // Service - Repository
 const ProductModel = require("../dao/models/product.model")
 const CartModel = require("../dao/models/cart.model")
-const UserModel = require("../dao/models/user.model")
 
 const { logger } = require("../logger/logger")
 
@@ -46,7 +45,6 @@ class CartsService {
         })
 
         return cartsTransformed
-        // return carts
     }
 
     async getCartById(id) {
@@ -61,7 +59,6 @@ class CartsService {
         }
 
         const cart = await this.dao.getCartById(id)
-        // console.log("RESPUESTA getCartById DAO => ", cart)
 
         if (cart === false) {
             throw CustomError.createError({
@@ -83,7 +80,6 @@ class CartsService {
         // Transformacion de cart usando DTO
         const dto = new CartsDTO(cart)
         const cartTransformed = dto.trasnformOneCart()
-
         return cartTransformed
     }
 
@@ -102,15 +98,13 @@ class CartsService {
         // Transformacion de cart usando DTO
         const dto = new CartsDTO(result)
         const cartTransformed = dto.trasnformOneCart()
-
         return cartTransformed
     }
 
     async addProductToExistingCart(cartId, productId, quantity, userInfo) {
-        // try {
         let productExistInCart
         quantity = +quantity
-        console.log("TYPE OF QUANTITY", typeof(quantity), quantity )
+
         // Busco el carrito
         const cart = await CartModel.findOne({ _id: cartId })
         if (!cart) {
@@ -157,10 +151,11 @@ class CartsService {
                 code: ErrorCodes.INVALID_TYPES_ERROR
             })
         }
-        logger.debug("PRODUCTO ENCONTRADO => ", productToAdd)
 
-        console.log("PRODUCT OWNER => ", productToAdd.owner)
-        console.log("USER => ", user.email)
+        logger.debug("PRODUCTO ENCONTRADO => ", productToAdd)
+        logger.debug("PRODUCT OWNER => ", productToAdd.owner)
+        logger.debug("USER => ", user.email)
+
         // Me fijo si el producto tiene como Owner al usuario que lo quiere agregar a su carrito. Si son la misma persona, mando error, no se puede. EXCEPTO EL ADMIN.
         if (productToAdd.owner === user.email) {
             if (user.email === "admin@admin.com") {
@@ -179,12 +174,9 @@ class CartsService {
         let found = cart.products.find(productToAdd => {
             return (productToAdd._id.toString() === productId)
         })
-        console.log("BUSQUEDA SERVICE => ", found)
-
 
         // Si no existe, lo agrego al carrito
         if (!found) {
-
             // Verifico la cantidad actual, la que se quiere ingresar y el stock disponible
             if (quantity < 0 || quantity > productToAdd.stock) {
                 throw CustomError.createError({
@@ -201,7 +193,7 @@ class CartsService {
 
             // Si existe, sumo la cantidad ingresada + la que que tenia y actualizo el producto    
         } else if (found) {
-            console.log("FOUND ENCONTRADO => ", found)
+            logger.debug("FOUND ENCONTRADO => ", found)
 
             // Verifico la cantidad actual, la que se quiere actualizar y el stock disponible
             if (found.quantity < 0 || quantity < 0 || quantity > productToAdd.stock) {
@@ -213,9 +205,7 @@ class CartsService {
                 })
             }
             found.quantity = +found.quantity
-            console.log( "TYPE OF FOUND.QUANTITY", typeof(found.quantity), found.quantity)
             quantity = quantity + found.quantity
-            console.log("NUEVA CANTIDAD => ", quantity )
             productExistInCart = true
 
             const cartUpdate = this.dao.addProductToExistingCart(productExistInCart, cartId, productId, quantity)
@@ -267,7 +257,6 @@ class CartsService {
             }
 
             found.quantity = quantity
-
             const cartUpdate = await this.dao.updateProductFromExistingCart(cartId, productId, quantity)
             return cartUpdate
 
@@ -309,10 +298,9 @@ class CartsService {
                     code: ErrorCodes.DATABASE_ERROR
                 })
             }
-
             return deleteProduct
 
-            // Si no esta, arrojo un error
+        // Si no esta, arrojo un error
         } else if (!found) {
             throw CustomError.createError({
                 name: "Not Found ",
@@ -345,7 +333,6 @@ class CartsService {
                 code: ErrorCodes.DATABASE_ERROR
             })
         }
-
         return result
     }
 
@@ -399,24 +386,19 @@ class CartsService {
         for (let i = 0; i < cart.products.length; i++) {
             // Obtengo la cantidad y el ID del producto
             const quantity = cart.products[i].quantity
-            console.log("CANTIDAD DEL PRODUCTO => ", quantity, typeof(quantity))
             const productId = cart.products[i].id.toString()
 
             // Busca el producto en la base de datos
             const productToPurchase = await productsService.getProductById(productId)
-            console.log("PRECIO DEL PRODUCTO => ", productToPurchase.price, typeof(productToPurchase.price))
             // Calculo el monto de este producto y lo añado al total
             const amount = productToPurchase.price * quantity
-            console.log("MONTO => ", amount, typeof(amount))
 
             totalAmount += amount
-            console.log("MONTO TOTAL => ", totalAmount, typeof(totalAmount))
             // Actualizo el stock del producto
             const remainingStock = productToPurchase.stock - quantity
             await productsService.updateProduct(productId, { stock: remainingStock })
         }
 
-        console.log("MONTO TOTAL AHORA SI => ", totalAmount)
         // Genero el ticket con el total de la compra
         const ticket = await TicketModel.create({
             code: parseInt(Math.random() * 1000),

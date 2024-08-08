@@ -16,7 +16,7 @@
         </dv>
 
         <button class="delete-button" data-id="{{id}}" class="boton-generico"> Delete </button>
-        
+
         <button class="role-button" data-id="{{id}}" class="boton-generico"> Switch Role </button>
     </div>
     {{/each}}
@@ -32,5 +32,3 @@
 {{#if users.hasNextPage}}
 <a href="/users?page={{users.nextPage}}&limit={{users.limit}}" class="boton-generico"> Next </a>
 {{/if}}
-
-{{!-- <button onclick="deleteOldUsers()">Eliminar Usuarios Antiguos</button> --}}

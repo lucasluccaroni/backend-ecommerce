@@ -41,9 +41,7 @@ const logger = enviroment === "prod" ? prodLogger : devLogger
  */
 const useLogger = (req, res, next) => {
     req.logger = logger
-
     next()
 }
 
-
-module.exports = { useLogger, logger}
+module.exports = { useLogger, logger }

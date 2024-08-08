@@ -39,7 +39,6 @@ class UsersDAO {
     async resetUserPassword(email, password) {
         try {
             const updatedUser = UserModel.updateOne({ email }, { $set: { password } })
-
             return updatedUser
         }
         catch (err) {
@@ -52,7 +51,6 @@ class UsersDAO {
         try {
             const result = await UserModel.findByIdAndUpdate({ _id: id }, { $set: { role: userRole } })
             return result
-
         }
         catch (err) {
             logger.error(`Error en ProductsDAO - changeRole => ${err}`)

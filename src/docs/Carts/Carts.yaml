@@ -657,7 +657,7 @@ paths:
           required: true
           description: ID del carrito a eliminar
           schema:
-            $type: string  
+            $type: string
       responses:
         "200":
           description: Operacion exitosa. El user efectúa la compra de su carrito.
@@ -672,7 +672,7 @@ paths:
                   payload:
                     type: object
                     properties:
-                      code: 
+                      code:
                         type: number
                         example: 35
                       purchase_datetime:
@@ -706,7 +706,6 @@ paths:
                   message:
                     type: string
                     example: "Cart 66637b140a048659379d83a0 does not belong to this user!. Select your cart please."
-
 
 components:
   schemas:

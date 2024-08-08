@@ -33,9 +33,7 @@ module.exports = () => {
 
     // Usuario premium
     router.get("/premium/:uid", userIsLoggedIn, async (req, res) => {
-
         await controller.changeRole(req, res)
-
     })
 
     // Reset Password 1 (nuevo, con jwt) - Se envia un mail para restablecer la contraseña
@@ -46,17 +44,15 @@ module.exports = () => {
     // Reset Password 2 (nuevo, con jwt) - El mail contiene un link para restablecer la contraseña. El link es un form "post" que manda los datos hacia aca
     router.post("/reset-password", async (req, res) => {
         await controller.newResetPassword(req, res)
-
     })
 
     // Carga de documentos
     router.post("/:uid/documents", uploaderDocuments.array("documents", 3), async (req, res) => {
-
         await controller.uploadDocuments(req, res)
     })
 
     // Borrar todos los usuarios con "ultima conexion" antigua
-    router.delete("/", userIsLoggedIn, userShouldBeAdmin,async (req, res) => {
+    router.delete("/", userIsLoggedIn, userShouldBeAdmin, async (req, res) => {
         await controller.deleteOldUsers(req, res)
     })
 
@@ -68,7 +64,6 @@ module.exports = () => {
     // Cambiar el rol de un usuario (hecho por el admin)
     router.put("/admin-changeRole/:uid", userIsLoggedIn, userShouldBeAdmin, async (req, res) => {
         await controller.changeRoleAdmin(req, res)
-
     })
 
     return router

@@ -61,7 +61,6 @@ module.exports = () => {
 
     // Cargar imagenes de productos
     router.post("/:pid/images", userIsLoggedIn, userShouldBeAdminOrPremium, uploaderProducts.array("images", 2), async (req, res) => {
-
         await controller.uploadImages(req, res)
     })
 

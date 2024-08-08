@@ -40,7 +40,6 @@ class UsersService {
                 lean: true
             }
         )
-        // console.log("User-service - USERS DESPUES DE PAGINATE => ", users)
 
         // Transformacion de usuarios usando DTO
         let usersTransformed = await users.docs.map(u => {
@@ -60,7 +59,7 @@ class UsersService {
         const resetLink = `http://localhost:8080/new-reset-password?token=${token}`
 
         return await transport.sendMail({
-            from: "LucasLucc",
+            from: "luccaroni@gmail.com",
             to: `${email}`,
             subject: "Password recovery service.",
             html: `
@@ -72,7 +71,6 @@ class UsersService {
                 `
         })
     }
-
 
     async newResetPassword(token, password) {
         try {
@@ -104,6 +102,7 @@ class UsersService {
 
             // Si esta todo bien, hasheo la nueva contraseña
             const hashedPassword = hashPassword(password)
+
             // Actuializo la nueva contraseña
             const resetPassword = await this.dao.resetUserPassword(tokenInfo.email, hashedPassword)
 
@@ -116,12 +115,10 @@ class UsersService {
         }
     }
 
-
     async getUserById(id) {
         const user = this.dao.getUserById(id)
         return user
     }
-
 
     async changeRole(id) {
 
@@ -161,7 +158,6 @@ class UsersService {
 
         // Mando al DAO la actualizacion de Rol
         const changeRole = await this.dao.changeRole(id, newUserRole)
-
         return `New user role: ${newUserRole}`
     }
 
@@ -204,7 +200,6 @@ class UsersService {
 
         // Le cargo la imagen al user en la DB
         const uploadDocuments = this.dao.uploadDocuments(userId, processedFiles)
-
         return uploadDocuments
     }
 
@@ -235,7 +230,6 @@ class UsersService {
     async deleteOldUsers() {
 
         const emails = []
-
         const dosDias = new Date()
         dosDias.setDate(dosDias.getDate() - 2)
 
@@ -243,8 +237,6 @@ class UsersService {
         const usersToDelete = await UserModel.find(
             { last_connection: { $lt: dosDias } }
         )
-
-        console.log("USUARIOS A BORRAR => ", usersToDelete)
 
         const deleteOldUsers = await this.dao.deleteOldUsers(dosDias)
 
@@ -256,7 +248,6 @@ class UsersService {
             })
 
             emails.forEach(email => {
-
                 transport.sendMail({
                     from: "luccaroni@gmail.com",
                     to: `${email}`,
@@ -271,7 +262,6 @@ class UsersService {
                 })
             })
         }
-
         return deleteOldUsers
     }
 
@@ -318,8 +308,6 @@ class UsersService {
         const changeRole = await this.dao.changeRole(userId, newUserRole)
         return changeRole
     }
-
 }
-
 
 module.exports = { UsersService }

@@ -74,9 +74,7 @@ class ProductsDAO {
                 { $push: { thumbnail: processedFiles } },
                 { new: true }
             )
-
             console.log(uploadImages)
-
             return uploadImages
         }
         catch (err) {

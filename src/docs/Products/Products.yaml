@@ -163,7 +163,7 @@ paths:
                   error:
                     type: string
                     example: "User should be logged in!"
-    put: 
+    put:
       summary: Actualiza un producto ya creado.
       tags:
         - Products
@@ -203,7 +203,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "User should be logged in!" 
+                    example: "User should be logged in!"
         "400":
           description: Informacion invalida, error en los campos del producto
           content:
@@ -245,7 +245,7 @@ paths:
                     example: "Product not found in Database."
                   message:
                     type: string
-                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)" 
+                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)"
         "500":
           description: Error en la base de datos
           content:
@@ -312,7 +312,7 @@ paths:
                     example: Wrong Owner
                   message:
                     type: string
-                    example: This product does not belong to you and you're not admin! 
+                    example: This product does not belong to you and you're not admin!
         "404":
           description: No se encontró el producto en la base de datos.
           content:
@@ -328,7 +328,7 @@ paths:
                     example: "Product not found in Database."
                   message:
                     type: string
-                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)" 
+                    example: "Invalid product data. ID: Should be an MongoObjectId. Recived: '665bcc5e62586dd771asdasda (string)"
         "500":
           description: Error en la base de datos
           content:
@@ -345,7 +345,6 @@ paths:
                   message:
                     type: string
                     example: "An unexpected error caused failure in opreation. Please try again later and verify your inputs."
-
 
 components:
   schemas:
@@ -463,7 +462,3 @@ components:
         thumbnail: "cachafaz.jpg"
         stock: 65
         category: alfajores
-
-
-
-

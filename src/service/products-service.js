@@ -3,7 +3,7 @@ const { ProductsDTO } = require("../dao/dtos/products.dto")
 const ProductModel = require("../dao/models/product.model")
 const { CustomError } = require("./errors/CustomError")
 const { ErrorCodes } = require("./errors/errorCodes")
-const { generateInvalidProductIdError, generateInvalidProductDataError, generateWrongOwnerError } = require("./errors/errors")
+const { generateInvalidProductIdError, generateWrongOwnerError } = require("./errors/errors")
 const errors = require("./errors/errors")
 const { logger } = require("../logger/logger")
 const { transport } = require("../utils/nodemailer")
@@ -36,7 +36,6 @@ class ProductsService {
                 lean: true
             }
         )
-        console.log("PRODUCTS DESPUES DE PAGINATE => ", products)
 
         // Transformacion de productos usando DTO
         let productsTransformed = await products.docs.map(p => {
@@ -44,11 +43,8 @@ class ProductsService {
             const transformation = dto.transform()
             return transformation
         })
-        // console.log("PRODUCTS DTO",productsTransformed)
+
         products.docs = productsTransformed
-        // console.log("PRODUCTS PAGINATE => ", products)
-
-
         return products
     }
 
@@ -64,7 +60,6 @@ class ProductsService {
         }
 
         const product = await this.dao.getProductById(id)
-        // console.log("RESPUESTA PRODUCT DAO => ", product)
 
         if (product === false) {
             throw CustomError.createError({
@@ -86,7 +81,6 @@ class ProductsService {
         // Transformacion de producto usando DTO
         const dto = new ProductsDTO(product)
         const productTransformed = dto.transform()
-        //console.log(productTransformed)
         return productTransformed
     }
 
@@ -131,7 +125,7 @@ class ProductsService {
         }
 
         const productToUpdate = await this.dao.getProductById(id)
-        logger.info("PRODUCT FOUND SERVICE", productToUpdate)
+        logger.info("PRODUCT FOUND SERVICE => ", productToUpdate)
 
         if (!productToUpdate) {
             throw CustomError.createError({
@@ -160,7 +154,6 @@ class ProductsService {
         // Busco el producto
         const product = await this.getProductById(id)
         const productOwner = product.owner
-        console.log("SERVICE - PRODUCT TO DELETE => ", productOwner)
 
         // Me fijo si el producto tiene como Owner al usuario que lo quiere eliminar. Solo puede eliminarlo la persona que lo creó Y EL ADMIN.
         if (userEmail !== product.owner) {
@@ -211,9 +204,6 @@ class ProductsService {
                 </div>
                 `
         })
-
-        logger.debug("DELETED PRODUCT SERVICE", deletedProduct.deletedCount)
-
         return (deletedProduct)
     }
 
@@ -239,7 +229,6 @@ class ProductsService {
 
         // Le cargo la imagen al user en la DB
         const uploadImages = this.dao.uploadImages(productId, processedFiles)
-
         return uploadImages
     }
 }

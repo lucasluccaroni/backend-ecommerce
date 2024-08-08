@@ -13,7 +13,6 @@ module.exports = {
             return res.render("notLoggedIn", {
                 title: "ERROR"
             })
-            // return res.status(401).json({ error: "User should be logged in!" })
         }
         next()
     },
@@ -88,9 +87,9 @@ module.exports = {
         }
 
         // Me fijo si el usuario es admin
-        console.log("INFO DE SESSION AUTH MIDDLEWARE, USER SHOULD BE ADMIN => ", req.session)
+        logger.http("INFO DE SESSION AUTH MIDDLEWARE, USER SHOULD BE ADMIN => ", req.session)
         const sessionInfo = req.session.user
-        console.log("SESSION.USER DATA => ", sessionInfo)
+        logger.debug("SESSION.USER DATA => ", sessionInfo)
 
         // Valido si es admin. Si NO es manda un error
         if (adminData.role !== sessionInfo.role) {
@@ -113,9 +112,9 @@ module.exports = {
         }
 
         // Me fijo que es el usuario: admin - premium - user
-        console.log("INFO DE SESSION AUTH MIDDLEWARE, USER SHOULD BE ADMIN => ", req.session)
+        logger.http("INFO DE SESSION AUTH MIDDLEWARE, USER SHOULD BE ADMIN => ", req.session)
         const sessionInfo = req.session.user.email
-        console.log("SESSION.USER EMAIL => ", sessionInfo)
+        logger.debug("SESSION.USER EMAIL => ", sessionInfo)
 
         // Valido si es admin o premium. Si NO es manda un error
         switch (sessionInfo) {

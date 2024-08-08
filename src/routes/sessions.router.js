@@ -20,9 +20,7 @@ module.exports = () => {
 
         console.log(req.user.documents.length)
         const idFromSession = req.session.user.id
-        // req.logger.info("Info de session en Current: ", req.session.user)
-        // req.logger.info("ID SESSION => ", idFromSession)
-
+        
         // Si tiene _id: 1 (porque es admin), importo los datos de admin y los renderizo.
         if (idFromSession == 1) {
             const user = req.session.user
@@ -49,7 +47,7 @@ module.exports = () => {
     router.post("/login", adminAuth, passport.authenticate("login", { failureRedirect: "/api/sessions/faillogin" }), async (req, res) => {
         req.logger.info("INFO PARA LOGIN => ", req.body)
         req.session.user = { email: req.user.email, id: req.user.id }
-        
+
         const updateLastConnection = await controller.updateLastConnection(req, res)
         res.redirect("/")
     })
@@ -81,20 +79,10 @@ module.exports = () => {
         })
     })
 
-    // RESET PASSWORD (viejo)
-    //// router.post("/reset_password", async (req, res) => {
-    ////     const resetPassword = await controller.resetPassword(req, res)
-    ////     req.logger.info(resetPassword)
-
-    ////     res.redirect("/")
-    //// })
-
     // RESET PASSWORD (nuevo con JWT)
     router.post("/forgot-password", async (req, res) => {
         const newResetPassword = await controller.newResetPassword(req, res)
         console.log(newResetPassword)
-        // res.render("forgot-password", {
-        // })
     })
 
     return router

@@ -39,7 +39,7 @@ app.use(passport.session())
 
 // Swagger
 const swaggerJsDoc = require("swagger-jsdoc")
-const { serve, setup  } = require("swagger-ui-express")
+const { serve, setup } = require("swagger-ui-express")
 const _ = require("mongoose-paginate-v2")
 
 // Handlebars
@@ -87,8 +87,8 @@ const main = async () => {
         { path: "/api/products", createRouter: createProductsRouter },
         { path: "/api/carts", createRouter: createCartsRouter },
         { path: "/mockingproducts", createRouter: createMocksRouter },
-        {path: "/loggerTest", createRouter: createLoggerRouter},
-        {path: "/users", createRouter: createUsersRouter}
+        { path: "/loggerTest", createRouter: createLoggerRouter },
+        { path: "/users", createRouter: createUsersRouter }
     ]
 
     for (const { path, createRouter } of routers) {
