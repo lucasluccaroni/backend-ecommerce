@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    purchase_datetime:{
+    purchase_datetime: {
         type: Date,
         default: Date.now,
         required: true
@@ -15,11 +15,11 @@ const schema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    purchaser:{
+    purchaser: {
         type: String,
         required: true
     }
-    
+
 })
 
 module.exports = mongoose.model("Ticket", schema, "tickets")

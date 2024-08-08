@@ -33,7 +33,7 @@ const schema = new mongoose.Schema({
     documents: [
         {
             docName: { type: String },
-            docReference: { type: String}
+            docReference: { type: String }
         }
     ],
     last_connection: {

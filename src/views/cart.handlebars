@@ -18,5 +18,7 @@
 <button id="clear-button" data-id="{{cart.id}}" class="boton-generico" > Clear Cart</button>
 <a href="/api/products" class="boton-generico"> Products </a>
 
-<button id="buy-cart" data-id="{{cart.id}}" > Buy Cart</button>
-{{!-- <a href="" class="boton-generico "> Buy cart </a> --}}
+
+<form action="/api/carts/{{cart.id}}/purchase" method="POST">
+    <button type="submit" class="boton-generico"> Buy CART </button>
+</form>

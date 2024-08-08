@@ -399,20 +399,24 @@ class CartsService {
         for (let i = 0; i < cart.products.length; i++) {
             // Obtengo la cantidad y el ID del producto
             const quantity = cart.products[i].quantity
+            console.log("CANTIDAD DEL PRODUCTO => ", quantity, typeof(quantity))
             const productId = cart.products[i].id.toString()
 
             // Busca el producto en la base de datos
             const productToPurchase = await productsService.getProductById(productId)
-
+            console.log("PRECIO DEL PRODUCTO => ", productToPurchase.price, typeof(productToPurchase.price))
             // Calculo el monto de este producto y lo añado al total
             const amount = productToPurchase.price * quantity
-            totalAmount += amount
+            console.log("MONTO => ", amount, typeof(amount))
 
+            totalAmount += amount
+            console.log("MONTO TOTAL => ", totalAmount, typeof(totalAmount))
             // Actualizo el stock del producto
             const remainingStock = productToPurchase.stock - quantity
             await productsService.updateProduct(productId, { stock: remainingStock })
         }
 
+        console.log("MONTO TOTAL AHORA SI => ", totalAmount)
         // Genero el ticket con el total de la compra
         const ticket = await TicketModel.create({
             code: parseInt(Math.random() * 1000),

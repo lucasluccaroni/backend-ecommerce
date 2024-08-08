@@ -4,15 +4,15 @@
 class ProductsDTO {
     constructor(product) {
         this.id = product._id.toString(),
-        this.title = product.title,
-        this.description = product.description,
-        this.price = product.price,
-        this.thumbnail = product.thumbnail,
-        this.code = product.code,
-        this.stock = product.stock,
-        this.status = product.status,
-        this.category = product.category,
-        this.owner = product.owner
+            this.title = product.title,
+            this.description = product.description,
+            this.price = product.price,
+            this.thumbnail = product.thumbnail,
+            this.code = product.code,
+            this.stock = product.stock,
+            this.status = product.status,
+            this.category = product.category,
+            this.owner = product.owner
     }
 
     transform() {
@@ -28,7 +28,7 @@ class ProductsDTO {
         }
     }
 
-    inCartTransform(quantity){
+    inCartTransform(quantity) {
         return {
             id: this.id,
             quantity

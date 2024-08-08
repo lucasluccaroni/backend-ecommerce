@@ -1,5 +1,5 @@
 const CartModel = require("../models/cart.model")
-const { logger} = require("../../logger/logger")
+const { logger } = require("../../logger/logger")
 
 class CartsDAO {
 
@@ -23,7 +23,7 @@ class CartsDAO {
 
     async getCartById(id) {
         try {
-            const cart = await CartModel.findOne({_id: id})
+            const cart = await CartModel.findOne({ _id: id })
             return cart ?? false
         }
         catch (err) {
@@ -71,10 +71,10 @@ class CartsDAO {
     }
 
     async updateProductFromExistingCart(cartId, productId, quantity) {
-        try {          
+        try {
             const cartUpdate = await CartModel.updateOne({ _id: cartId, "products._id": productId }, { $set: { "products.$.quantity": quantity } })
 
-           logger.http(`CART ACTUALIZADO: ${await CartModel.findOne({ _id: cartId })}`);
+            logger.http(`CART ACTUALIZADO: ${await CartModel.findOne({ _id: cartId })}`);
             return cartUpdate
         }
         catch (err) {
@@ -88,7 +88,6 @@ class CartsDAO {
         try {
             const cartUpdate = await CartModel.updateOne({ _id: cartId }, { $pull: { products: { _id: productId } } })
             return cartUpdate
-
         }
         catch (err) {
             logger.error("Error en CartsDAO - deleteProductFromExistingCart => ", err)
@@ -97,7 +96,7 @@ class CartsDAO {
     }
 
     async clearCart(cid) {
-        try {    
+        try {
             const cartUpdate = await CartModel.updateOne({ _id: cid }, {
                 $set: { products: [] }
             })

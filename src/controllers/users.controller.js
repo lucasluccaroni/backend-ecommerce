@@ -19,13 +19,10 @@ class UsersController {
 
             const users = await this.service.getUsers(query, sort, limit, page)
 
-            // console.log("RESULTADO USERS EN CONTROLLER => ", users)
-
             return users
         }
         catch (err) {
             req.logger.fatal(err)
-            console.log(err)
             res.sendError(err.message)
         }
     }
@@ -35,7 +32,6 @@ class UsersController {
     async getUserById(req, res) {
         try {
             const idFromSession = req.session.user.id
-            logger.debug("ID SESSION CONTROLLER => ", idFromSession)
 
             if (idFromSession == 1) {
                 const user = req.session.user
@@ -56,7 +52,6 @@ class UsersController {
     async changeRole(req, res) {
         try {
             const userId = req.params.uid
-            logger.info("USER ID - USERS CONTROLLER => ", userId)
 
             const changeRole = await this.service.changeRole(userId)
             res.sendSuccess(`User role modified! => ${changeRole} `)
@@ -72,13 +67,10 @@ class UsersController {
     async sendEmailToResetPassword(req, res) {
         try {
             const { email } = req.query
-            logger.debug("EMAIL EN USERS CONTROLLER => ", email)
-
             await this.service.sendResetEmail(email)
             res.send("Recovery email sent. Check your inbox.")
         }
         catch (err) {
-            console.log("ERR.MESSAGE => ", err.message)
             req.logger.fatal("CATCH EN CONTROLLER - newResetPassword", err)
             req.logger.error(err.code)
             res.sendError(err.message)
@@ -136,7 +128,6 @@ class UsersController {
         const userId = req.user.id
         try {
             const updateLastConnection = await this.service.updateLastConnection(userId)
-            console.log(updateLastConnection)
         }
         catch (err) {
             req.logger.fatal("CATCH EN CONTROLLER - uploadDocuments", err)
@@ -149,14 +140,12 @@ class UsersController {
     async deleteOldUsers(req, res) {
         try {
             const deleteOldUsers = await this.service.deleteOldUsers()
-            console.log("DELETE OLD USERS CONTROLLER => ", deleteOldUsers)
 
             if (deleteOldUsers?.deletedCount >= 1) {
                 res.sendSuccess(`${deleteOldUsers.deletedCount} users has been successfully deleted.`)
             } else {
                 res.sendSuccess("No users found to delete.")
             }
-
         }
         catch (err) {
             req.logger.fatal("CATCH EN CONTROLLER - deleteOldUsers", err)
@@ -169,8 +158,6 @@ class UsersController {
     async deleteOneUser(req, res) {
         try {
             const userId = req.params.uid
-            console.log(userId)
-
             const deleteOneUser = await this.service.deleteOneUser(userId)
             return deleteOneUser
         }
@@ -185,8 +172,6 @@ class UsersController {
     async changeRoleAdmin(req, res) {
         try {
             const userId = req.params.uid
-            console.log("USER ID CHANGE ROLE => ", userId)
-
             const changeRoleAdmin = await this.service.changeRoleAdmin(userId)
             return changeRoleAdmin
         }

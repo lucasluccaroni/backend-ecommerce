@@ -1,11 +1,11 @@
 const { config } = require("dotenv")
-
+const { logger } = require("../logger/logger")
 config()
 
 // Base de datos dev o prod
 const dbName = process.env.NODE_ENV === "prod" ? "coderhouse-backend-capas" : "base-dev"
 process.env.DB_NAME = dbName
-console.log(` DTABASE NAME => ${process.env.DB_NAME}`)
+logger.debug(` DTABASE NAME => ${process.env.DB_NAME}`)
 
 module.exports = {
     mongoUri: process.env.MONGO_URI,
