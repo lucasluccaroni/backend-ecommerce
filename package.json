@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test --recursive",
-    "start": "nodemon --env-file=.env --watch-path=src src/app.js"
+    "start": "node src/app.js",
+    "start local": "nodemon --env-file=.env --watch-path=src src/app.js"
   },
   "author": "lucas luccaroni",
   "license": "ISC",
