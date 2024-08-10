@@ -56,7 +56,7 @@ class UsersService {
         const token = jwt.sign({ email }, privateKey, { expiresIn: "1h" })
         console.log("TOKEN CREADO EN sendResetEmail => ", token)
 
-        const resetLink = `http://localhost:8080/new-reset-password?token=${token}`
+        const resetLink = `pfinal-backend-luccaroni-production.up.railway.app/new-reset-password?token=${token}`
 
         return await transport.sendMail({
             from: "luccaroni@gmail.com",

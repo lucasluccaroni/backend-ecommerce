@@ -300,7 +300,7 @@ class CartsService {
             }
             return deleteProduct
 
-        // Si no esta, arrojo un error
+            // Si no esta, arrojo un error
         } else if (!found) {
             throw CustomError.createError({
                 name: "Not Found ",
@@ -399,10 +399,15 @@ class CartsService {
             await productsService.updateProduct(productId, { stock: remainingStock })
         }
 
+        // Establezco la hora actual
+        const fechaUTC = new Date()
+        const desplazamientoHorario = -3 * 60 * 60 * 1000
+        const fechaHoraArg = new Date(fechaUTC.getTime() + desplazamientoHorario)
+
         // Genero el ticket con el total de la compra
         const ticket = await TicketModel.create({
             code: parseInt(Math.random() * 1000),
-            purchase_datetime: Date.now(),
+            purchase_datetime: fechaHoraArg,
             amount: totalAmount,
             purchaser: user.email
         })
