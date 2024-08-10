@@ -66,7 +66,9 @@ class UsersService {
                 <div>
                     <h2> Genere una nueva conraseña </h2>
                     <p> Haga clic en el siguiente enlace para restablecer su contraseña. </p> 
-                    <a href=${resetLink} > Click aqui </a>
+                    <a href="${resetLink}"> Click aqui </a>
+                    <p> Si no ve el boton, copie y pegue el siguiente enlace (sin los corchetes [])  </p>
+                    <p> ${resetLink} </p>
                 </div>
                 `
         })
