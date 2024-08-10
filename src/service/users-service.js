@@ -204,7 +204,7 @@ class UsersService {
     }
 
     async updateLastConnection(userId) {
-
+        
         // Busco al user por su id
         const user = await this.dao.getUserById(userId)
         if (!user) {

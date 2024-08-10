@@ -125,6 +125,13 @@ class UsersController {
 
     // Actualizar la fecha de última conexion en la DB
     async updateLastConnection(req, res) {
+
+        console.log("update -> ", req.session.user.email)
+        // Si es el admin quien se quiere desconectar, no hace todo el proceso de updateLastConnecion.
+        if(req.session.user.email === "admin@admin.com") {
+            return console.log("Adios admin.")
+        }
+
         const userId = req.user.id
         try {
             const updateLastConnection = await this.service.updateLastConnection(userId)
